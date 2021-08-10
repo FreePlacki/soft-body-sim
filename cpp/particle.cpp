@@ -1,8 +1,14 @@
+/**
+ * Implements methods from the Particle class.
+ * @file particle.cpp
+*/
+
 #include "../header/particle.h"
 #include <iostream>
 
 
-Particle::Particle(int r, float x, float y, float vx, float vy, float m, int color) {
+// constructor
+Particle::Particle(int r, double x, double y, double vx, double vy, double m, int color) {
     this->r = r;
     this->pos = Vector2(x, y);
     this->vel = Vector2(vx, vy);
@@ -10,7 +16,8 @@ Particle::Particle(int r, float x, float y, float vx, float vy, float m, int col
     this->color = color;
 }
 
-void Particle::update(float dt) {
+// applies force and updates pos and vel
+void Particle::update() {
     //Vector2 force = Vector2(0, this->m * g);
     Vector2 force = Vector2(0, 0);
     Vector2 acc = force / this->m;
@@ -20,4 +27,14 @@ void Particle::update(float dt) {
     this->vel += dv;
     this->pos += dp;
     // std::cout << dt << "\n";
+}
+
+// draws circle to the window
+void Particle::draw(sf::RenderWindow &win) {
+    sf::CircleShape circ(this->r);
+    circ.setFillColor(sf::Color::Red);
+    circ.setOrigin(this->r, this->r);
+    circ.setPosition(this->pos.x, this->pos.y);
+
+    win.draw(circ);
 }

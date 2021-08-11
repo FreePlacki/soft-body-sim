@@ -55,6 +55,10 @@ void Engine::draw(sf::RenderWindow &win) {
     for (Particle p : this->particles) {
         p.draw(win);
     }
+
+    for (Shape s : this->shapes) {
+        s.draw(win);
+    }
 }
 
 // adds a particle to the vector
@@ -62,15 +66,24 @@ void Engine::addParticle(Particle &p) {
     this->particles.push_back(p);
 }
 
+// adds a shape to the vector
+void Engine::addShape(Shape &s) {
+    this->shapes.push_back(s);
+}
+
 // initializes graphical objects. Called at construction
 void Engine::initObjects() {
-    Particle p1 = Particle(10, WIDTH/2, HEIGHT/2, 100.0, 0.0, 10.f);
-    Particle p2 = Particle(10, WIDTH/2+100.0, HEIGHT/2, 100.0+50.0, 0.0, 9.f);
-    Particle p3 = Particle(10, WIDTH/2+200.0, HEIGHT/2, 100.0-50.0, 0.0, 9.f);
+    Particle p1 = Particle(10, WIDTH/2, HEIGHT/2, 100.0, 0.0);
+    Particle p2 = Particle(10, WIDTH/2+100.0, HEIGHT/2, 100.0+50.0, 0.0);
+    Particle p3 = Particle(10, WIDTH/2+200.0, HEIGHT/2, 100.0-50.0, 0.0);
     
     this->addParticle(p1);
     this->addParticle(p2);
     this->addParticle(p3);
+
+    Shape rect1 = Shape(100, 150, 200, 50);
+
+    this->addShape(rect1);
 }
 
 // solves a two-particle collision
@@ -122,4 +135,9 @@ void Engine::checkCollisions() {
 // getter for particles vector
 std::vector<Particle>& Engine::getParticles() {
     return this->particles;
+}
+
+// getter for shapes vector
+std::vector<Shape>& Engine::getShapes() {
+    return this->shapes;
 }

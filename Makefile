@@ -1,5 +1,5 @@
-output: main.o particle.o vector2.o window.o engine.o
-	g++ main.o particle.o vector2.o window.o engine.o -o soft-body-sim -lsfml-graphics -lsfml-window -lsfml-system
+output: main.o particle.o vector2.o window.o engine.o shape.o
+	g++ main.o particle.o vector2.o window.o engine.o shape.o -o soft-body-sim -lsfml-graphics -lsfml-window -lsfml-system
 	soft-body-sim.exe
 
 main.o: cpp/main.cpp
@@ -16,6 +16,9 @@ window.o: cpp/window.cpp header/window.h
 
 engine.o: cpp/engine.cpp header/engine.h
 	g++ -c cpp/engine.cpp
+
+shape.o: cpp/shape.cpp header/shape.h
+	g++ -c cpp/shape.cpp
 
 clean:
 	del *.o

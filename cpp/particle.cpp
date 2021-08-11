@@ -8,7 +8,7 @@
 
 
 // constructor
-Particle::Particle(int r, double x, double y, double vx, double vy, double m, int color) {
+Particle::Particle(int r, double x, double y, double vx, double vy, double m, uint32_t color) {
     this->r = r;
     this->pos = Vector2(x, y);
     this->vel = Vector2(vx, vy);
@@ -32,9 +32,12 @@ void Particle::update() {
 // draws circle to the window
 void Particle::draw(sf::RenderWindow &win) {
     sf::CircleShape circ(this->r);
-    circ.setFillColor(sf::Color::Red);
+    circ.setFillColor(sf::Color(this->color));
     circ.setOrigin(this->r, this->r);
     circ.setPosition(this->pos.x, this->pos.y);
+
+    // std::cout << this->color << "\n";
+    // std::cout << sf::Color(sf::Color::Red.toInteger()) << "\n";
 
     win.draw(circ);
 }

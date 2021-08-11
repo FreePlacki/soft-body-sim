@@ -35,7 +35,7 @@ public:
      * @param m mass
      * @param color color
     */
-    Particle(int r, double x, double y, double vx, double vy, double m=10.0, int color=1);
+    Particle(int r, double x, double y, double vx, double vy, double m=10.0, uint32_t color=sf::Color::Red.toInteger());
     
     /**
      * Applies forces and updates position and velocity.
@@ -43,7 +43,7 @@ public:
     void update();
 
     /**
-     * Draws a particle (circe) to the window.
+     * Draws a particle (circle) to the window.
      * @param win window to draw on
     */
     void draw(sf::RenderWindow &win);

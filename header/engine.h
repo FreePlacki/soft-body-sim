@@ -6,6 +6,7 @@
 #pragma once
 
 #include "particle.h"
+#include "shape.h"
 #include <vector>
 
 
@@ -13,6 +14,9 @@ class Engine {
 private:
     // list of all Particle objects
     std::vector<Particle> particles;
+
+    // lost of all shapes
+    std::vector<Shape> shapes;
 
     /**
      * Initializes graphical objects (called at construction).
@@ -65,8 +69,20 @@ public:
     void addParticle(Particle &p);
 
     /**
+     * Adds a Shape object to the shapes vector.
+     * @param s shape to add
+    */
+    void addShape(Shape &s);
+
+    /**
      * Getter method for the particles vector.
      * @return particles vector
     */
     std::vector<Particle>& getParticles();
+
+    /**
+     * Getter method for the shapes vector.
+     * @return shapes vector
+    */
+    std::vector<Shape>& getShapes();
 };

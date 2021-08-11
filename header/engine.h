@@ -7,11 +7,15 @@
 
 #include "particle.h"
 #include "shape.h"
+#include "window.h"
 #include <vector>
 
 
 class Engine {
 private:
+    // active Window object
+    Window *win;
+
     // list of all Particle objects
     std::vector<Particle> particles;
 
@@ -43,7 +47,7 @@ public:
      * Class constructor.
      * Calls the initObjects function.
     */
-    Engine();
+    Engine(Window &win);
 
     /**
      * Calls the update method for all the particles.
@@ -52,15 +56,13 @@ public:
 
     /**
      * Calls the draw method for all the particles.
-     * @param win window to draw on
     */
-    void draw(sf::RenderWindow &win);
+    void draw();
 
     /**
      * Contains the main while loop of the program.
-     * @param win window to draw on
     */
-    void mainLoop(sf::RenderWindow &win);
+    void mainLoop();
 
     /**
      * Adds a Particle object to the particles vector.

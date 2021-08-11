@@ -7,7 +7,9 @@
 
 
 // constructor
-Engine::Engine() {
+Engine::Engine(Window &win) {
+    this->win = &win;
+
     this->initObjects();
 }
 
@@ -21,27 +23,27 @@ void Engine::update() {
 }
 
 // main while loop
-void Engine::mainLoop(sf::RenderWindow &win) {
+void Engine::mainLoop() {
     double fps;
     sf::Clock clock;
     sf::Time previousTime = clock.getElapsedTime();
     sf::Time currentTime;
 
-    while (win.isOpen()) {
+    while (win->getWin().isOpen()) {
         sf::Event event;
-        while (win.pollEvent(event)) {
+        while (win->getWin().pollEvent(event)) {
             switch(event.type) {
                 case sf::Event::Closed:
-                    win.close();
+                    win->getWin().close();
                     break;
             }
         }
-        win.clear();
+        win->getWin().clear();
 
         this->update();
-        this->draw(win);
+        this->draw();
 
-        win.display();
+        win->getWin().display();
 
         currentTime = clock.getElapsedTime();
         fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
@@ -51,13 +53,13 @@ void Engine::mainLoop(sf::RenderWindow &win) {
 }
 
 // calls draw on all particles
-void Engine::draw(sf::RenderWindow &win) {
+void Engine::draw() {
     for (Particle p : this->particles) {
-        p.draw(win);
+        p.draw(win->getWin());
     }
 
     for (Shape s : this->shapes) {
-        s.draw(win);
+        s.draw(win->getWin());
     }
 }
 
@@ -73,15 +75,18 @@ void Engine::addShape(Shape &s) {
 
 // initializes graphical objects. Called at construction
 void Engine::initObjects() {
-    Particle p1 = Particle(10, WIDTH/2, HEIGHT/2, 100.0, 0.0);
-    Particle p2 = Particle(10, WIDTH/2+100.0, HEIGHT/2, 100.0+50.0, 0.0);
-    Particle p3 = Particle(10, WIDTH/2+200.0, HEIGHT/2, 100.0-50.0, 0.0);
+    int win_width = this->win->getSize().first;
+    int win_height = this->win->getSize().second;
+
+    Particle p1 = Particle(10, win_width/2, win_height/2, 100.0, 0.0);
+    Particle p2 = Particle(10, win_width/2+100.0, win_height/2, 100.0+50.0, 0.0);
+    Particle p3 = Particle(10, win_width/2+200.0, win_height/2, 100.0-50.0, 0.0);
     
     this->addParticle(p1);
     this->addParticle(p2);
     this->addParticle(p3);
 
-    Shape rect1 = Shape(100, 150, 200, 50);
+    Shape rect1 = Shape(100, 150, 200, 50, 20);
 
     this->addShape(rect1);
 }
@@ -112,11 +117,11 @@ std::pair<Vector2, Vector2> Engine::solveBallCollision(Particle &p1, Particle &p
 // solves collisions for all particles
 void Engine::checkCollisions() {
     for (int p1 = 0; p1 < particles.size(); p1++) {
-        if (particles[p1].pos.y + particles[p1].r >= HEIGHT
+        if (particles[p1].pos.y + particles[p1].r >= win->getSize().first
         ||  particles[p1].pos.y - particles[p1].r <= 0) {
             particles[p1].vel.y *= -1;
         }
-        if (particles[p1].pos.x + particles[p1].r >= WIDTH
+        if (particles[p1].pos.x + particles[p1].r >= win->getSize().second
         ||  particles[p1].pos.x - particles[p1].r <= 0) {
             particles[p1].vel.x *= -1;
         }

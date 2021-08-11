@@ -16,14 +16,18 @@
 using std::cout;
 using std::endl;
 
+#define WIN_WIDTH 800
+#define WIN_HEIGHT 800
+#define MAX_FPS 60
+
 // TODO add small function comments
 
 // Controls operations of the main program
 int main() {
-    Window win(WIDTH, HEIGHT, "Soft Body Sim", 60);
-    Engine eng;
+    Window win(WIN_WIDTH, WIN_HEIGHT, "Soft Body Sim", MAX_FPS);
+    Engine eng(win);
 
-    eng.mainLoop(win.getWin());
+    eng.mainLoop();
 
     return 0;
 }

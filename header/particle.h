@@ -8,8 +8,6 @@
 
 #include <SFML/Graphics.hpp>
 #include "vector2.h"
-#include "constants.h"
-
 
 class Particle {
 public:

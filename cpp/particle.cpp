@@ -22,8 +22,8 @@ void Particle::update() {
     Vector2 force = Vector2(0, 0);
     Vector2 acc = force / this->m;
 
-    Vector2 dv = acc*1/FPS;
-    Vector2 dp = this->vel*1/FPS;
+    Vector2 dv = acc*1/60;
+    Vector2 dp = this->vel*1/60;
     this->vel += dv;
     this->pos += dp;
     // std::cout << dt << "\n";

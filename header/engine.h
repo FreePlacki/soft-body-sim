@@ -9,6 +9,7 @@
 #include "shape.h"
 #include "window.h"
 #include <vector>
+#include <iostream>
 
 
 class Engine {

@@ -7,14 +7,14 @@
 
 
 // constructor
-Window::Window(int width, int height, std::string title, int FPS) {
+Window::Window(int width, int height, std::string title, int fps) {
     this->width = width;
     this->height = height;
     this->title = title;
     this->fps = fps;
 
     this->render_window.create(sf::VideoMode(width, height), title);
-    this->render_window.setFramerateLimit(FPS);
+    this->render_window.setFramerateLimit(fps);
 }
 
 // RenderWindow getter

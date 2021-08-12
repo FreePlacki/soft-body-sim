@@ -24,11 +24,15 @@ void Engine::update() {
 
 // main while loop
 void Engine::mainLoop() {
+    // calculating fps
     double fps;
+    // counter is for displaying fps once every x seconds
+    int counter = 0;
     sf::Clock clock;
     sf::Time previousTime = clock.getElapsedTime();
     sf::Time currentTime;
 
+    // event loop
     while (win->getWin().isOpen()) {
         sf::Event event;
         while (win->getWin().pollEvent(event)) {
@@ -38,6 +42,7 @@ void Engine::mainLoop() {
                     break;
             }
         }
+        // drawing process
         win->getWin().clear();
 
         this->update();
@@ -45,10 +50,15 @@ void Engine::mainLoop() {
 
         win->getWin().display();
 
+        // displaying fps
+        counter++;
         currentTime = clock.getElapsedTime();
         fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
-        //cout << "fps: " << fps << "\n";
         previousTime = currentTime;
+        if (counter == this->win->getFps()) {
+            std::cout << "fps: " << fps << " / " << this->win->getFps() << "\n";
+            counter = 0;
+        }
     }
 }
 
@@ -87,8 +97,10 @@ void Engine::initObjects() {
     this->addParticle(p3);
 
     Shape rect1 = Shape(100, 150, 200, 50, 20);
+    Shape rect2 = Shape(100, 150, 200, 50, 0);
 
     this->addShape(rect1);
+    this->addShape(rect2);
 }
 
 // solves a two-particle collision

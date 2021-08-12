@@ -15,8 +15,8 @@ public:
     int r;
     // mass
     double m;
-    // 1 - red
-    int color;
+    // integer color format
+    uint32_t color;
     
     // position
     Vector2 pos = Vector2(0, 0);
@@ -31,7 +31,7 @@ public:
      * @param vx x component of the velocity
      * @param vy y component of the velocity
      * @param m mass
-     * @param color color
+     * @param color color in uint32_t format
     */
     Particle(int r, double x, double y, double vx, double vy, double m=10.0, uint32_t color=sf::Color::Red.toInteger());
     

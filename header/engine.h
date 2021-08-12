@@ -29,7 +29,16 @@ private:
     void initObjects();
 
     /**
-     * solves the collision of two particles
+     * Solves and checks for particle-wall collision
+     * @param p1 particle to solve for
+     * @param width screen width
+     * @param height screen height
+     * @return Vector2 new particle velocity
+    */
+    Vector2 solveParticleWall(Particle &p, int width, int height);
+
+    /**
+     * Solves the collision of two particles
      * (from eq: https://en.wikipedia.org/wiki/Elastic_collision).
      * @param p1 particle one
      * @param p2 particle two

@@ -13,7 +13,7 @@ Engine::Engine(Window &win) {
     this->initObjects();
 }
 
-// calls update on all particles
+// calls update on all particles and checks collisions
 void Engine::update() {
     this->checkCollisions();
     for (auto &p : this->particles) {
@@ -62,7 +62,7 @@ void Engine::mainLoop() {
     }
 }
 
-// calls draw on all particles
+// calls draw on all entities
 void Engine::draw() {
     for (Particle p : this->particles) {
         p.draw(win->getWin());
@@ -97,15 +97,34 @@ void Engine::initObjects() {
     this->addParticle(p3);
 
     sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
-    Shape rect1 = Shape(100, 150, 4, rect1_points, 20);
+    Shape rect1 = Shape(500, 600, 4, rect1_points);
     //Shape rect2 = Shape(100, 150, 200, 50, 0);
 
     this->addShape(rect1);
     //this->addShape(rect2);
 }
 
+Vector2 Engine::solveParticleWall(Particle &p, int width, int height) {
+    Vector2 new_vel(p.vel.x, p.vel.y);
+    if (p.pos.y + p.r >= width
+        ||  p.pos.y - p.r <= 0) {
+            new_vel.y *= -1;
+        }
+    if (p.pos.x + p.r >= height
+        ||  p.pos.x - p.r <= 0) {
+            new_vel.x *= -1;
+        }
+
+    return new_vel;
+}
+
 // solves a two-particle collision
 std::pair<Vector2, Vector2> Engine::solveBallCollision(Particle &p1, Particle &p2) {
+    // if they are not colliding return (0, 0) vectors (no velocity to substruct)
+    if (!(abs(p1.pos.x - p2.pos.x) <= p1.r + p2.r
+        &&  abs(p1.pos.y - p2.pos.y) <= p1.r + p2.r))
+        return std::make_pair(Vector2(0, 0), Vector2(0, 0));
+    
     Vector2 vel_diff1 = p1.vel - p2.vel;
     Vector2 pos_diff1 = p1.pos - p2.pos;
     double dot1 = vel_diff1 * pos_diff1;
@@ -120,33 +139,23 @@ std::pair<Vector2, Vector2> Engine::solveBallCollision(Particle &p1, Particle &p
     double dist_sq2 = pos_diff2 * pos_diff2;
     Vector2 v2 = pos_diff2 * red_mass2 * dot2 / dist_sq2;
 
-    // cout << v1.x << " : " << v2.x << "\n";
-    // cout << p1.m << " : " << p2.m << "\n";
-    // cout << 1/(p1.m+p2.m) << "\n";
-
     return std::make_pair(v1, v2);
 }
 
 // solves collisions for all particles
 void Engine::checkCollisions() {
     for (int p1 = 0; p1 < particles.size(); p1++) {
-        if (particles[p1].pos.y + particles[p1].r >= win->getSize().first
-        ||  particles[p1].pos.y - particles[p1].r <= 0) {
-            particles[p1].vel.y *= -1;
-        }
-        if (particles[p1].pos.x + particles[p1].r >= win->getSize().second
-        ||  particles[p1].pos.x - particles[p1].r <= 0) {
-            particles[p1].vel.x *= -1;
+        // wall collision
+        particles[p1].vel = solveParticleWall(particles[p1], win->getSize().first, win->getSize().second);
+
+        // particle collision
+        for (int p2 = p1+1; p2 < particles.size(); p2++) {
+            std::pair<Vector2, Vector2> solved_vel = this->solveBallCollision(particles[p1], particles[p2]);
+            particles[p1].vel -= solved_vel.first;
+            particles[p2].vel -= solved_vel.second;
         }
 
-        for (int p2 = p1+1; p2 < particles.size(); p2++) {
-            if (abs(particles[p1].pos.x - particles[p2].pos.x) <= particles[p1].r + particles[p2].r
-            &&  abs(particles[p1].pos.y - particles[p2].pos.y) <= particles[p1].r + particles[p2].r) {
-                std::pair<Vector2, Vector2> solved_vel = this->solveBallCollision(particles[p1], particles[p2]);
-                particles[p1].vel -= solved_vel.first;
-                particles[p2].vel -= solved_vel.second;
-            }
-        }
+        //TODO shape collision
     }
 }
 

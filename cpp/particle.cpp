@@ -18,8 +18,9 @@ Particle::Particle(int r, double x, double y, double vx, double vy, double m, ui
 
 // applies force and updates pos and vel
 void Particle::update() {
-    //Vector2 force = Vector2(0, this->m * g);
-    Vector2 force = Vector2(0, 0);
+    const int g = 100;
+
+    Vector2 force = Vector2(0, this->m * g);
     Vector2 acc = force / this->m;
 
     Vector2 dv = acc*1/60;

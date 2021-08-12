@@ -18,6 +18,13 @@ public:
     static constexpr int MAX_POINT_COUNT = 20;
     int point_count;
     sf::Vector2f points[MAX_POINT_COUNT];
+    // shape's farthest points
+    std::map<std::string, int> bondries = {
+        {"top", -1},
+        {"bottom", -1},
+        {"left", -1},
+        {"right", -1}
+    };
     // TODO implement rotation
     // uint32_t format to convert to sf::Color
     uint32_t outline_color;

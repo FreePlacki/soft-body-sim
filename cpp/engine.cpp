@@ -93,17 +93,18 @@ void Engine::initObjects() {
     Particle p3 = Particle(10, win_width/2+200.0, win_height/2, 100.0-50.0, 0.0);
     
     this->addParticle(p1);
-    this->addParticle(p2);
-    this->addParticle(p3);
+    //this->addParticle(p2);
+    //this->addParticle(p3);
 
     sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
     Shape rect1 = Shape(500, 600, 4, rect1_points);
-    //Shape rect2 = Shape(100, 150, 200, 50, 0);
-
-    this->addShape(rect1);
-    //this->addShape(rect2);
+    sf::Vector2f rect2_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(300, 150), sf::Vector2f(0, 300), sf::Vector2f(-300, 150)};
+    Shape rect2 = Shape(200, 200, 4, rect2_points);
+    //this->addShape(rect1);
+    this->addShape(rect2);
 }
 
+// solves a particle-wall collision
 Vector2 Engine::solveParticleWall(Particle &p, int width, int height) {
     Vector2 new_vel(p.vel.x, p.vel.y);
     if (p.pos.y + p.r >= width
@@ -155,7 +156,35 @@ void Engine::checkCollisions() {
             particles[p2].vel -= solved_vel.second;
         }
 
-        //TODO shape collision
+        //shape collision
+        for (Shape s : shapes) {
+            Particle p = particles[p1];
+            // check collision
+            for (int point = 0; point < s.point_count; point++) {
+                // two points for a line (mod to loop back to first one time)
+                sf::Vector2f pt1 = s.points[point];
+                sf::Vector2f pt2 = s.points[(point+1) % s.point_count];
+                // obtaining the absolute pos
+                pt1 += sf::Vector2f(s.pos.x, s.pos.y);
+                pt2 += sf::Vector2f(s.pos.x, s.pos.y);
+
+                
+                // check bondries
+                if (p.pos.x <= s.bondries["right"]
+                 && p.pos.x >= s.bondries["left"]
+                 && p.pos.y >= s.bondries["top"]
+                 && p.pos.y <= s.bondries["bottom"]) {
+
+                // computing distance
+                double dist = abs((p.pos.x-pt1.x)*(-pt2.y+pt1.y) + (p.pos.y-pt1.y)*(pt2.x-pt1.x))
+                            / sqrt((-pt2.y+pt1.y)*(-pt2.y+pt1.y) + (pt2.x-pt1.x)*(pt2.x-pt1.x));
+                //std::cout << dist << "\n";
+                if (dist <= p.r) {
+                    std::cout << "collision\n";
+                }
+                }
+            }
+        }
     }
 }
 

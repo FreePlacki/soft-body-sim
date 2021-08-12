@@ -1,5 +1,5 @@
 /**
- * Handles logic, graphics and holds graphical objects (like Particle).
+ * Handles logic, graphics and stores graphical objects (like Particle).
  * @file engine.h
 */
 

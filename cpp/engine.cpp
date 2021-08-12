@@ -96,11 +96,12 @@ void Engine::initObjects() {
     this->addParticle(p2);
     this->addParticle(p3);
 
-    Shape rect1 = Shape(100, 150, 200, 50, 20);
-    Shape rect2 = Shape(100, 150, 200, 50, 0);
+    sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
+    Shape rect1 = Shape(100, 150, 4, rect1_points, 20);
+    //Shape rect2 = Shape(100, 150, 200, 50, 0);
 
     this->addShape(rect1);
-    this->addShape(rect2);
+    //this->addShape(rect2);
 }
 
 // solves a two-particle collision

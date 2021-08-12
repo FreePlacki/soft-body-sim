@@ -1,7 +1,7 @@
 /**
  * SFML app for simulating soft body interactions.
  * @file main.cpp
- * @version dev 10/08/2021
+ * @version dev 12/08/2021
 */
 
 #include <SFML/Graphics.hpp>

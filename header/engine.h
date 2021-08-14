@@ -29,28 +29,46 @@ private:
     void initObjects();
 
     /**
-     * Solves and checks for particle-wall collision
+     * Solves and checks for particle-wall collision.
+     * Updates particle's velocity and little nudge to position.
      * @param p1 particle to solve for
      * @param width screen width
      * @param height screen height
-     * @return Vector2 new particle velocity
     */
-    Vector2 solveParticleWall(Particle &p, int width, int height);
+    void solveParticleWall(Particle &p, int width, int height);
 
     /**
-     * Solves the collision of two particles
+     * Solves the collision of two particles.
+     * Updates their velocity.
      * (from eq: https://en.wikipedia.org/wiki/Elastic_collision).
      * @param p1 particle one
      * @param p2 particle two
      * @return std::pair<Vector2, Vector2> of the new velocities
     */
-    std::pair<Vector2, Vector2> solveBallCollision(Particle &p1, Particle &p2);
+    void solveParticleParticle(Particle &p1, Particle &p2);
+
+    /**
+     * Solves the collision of a particle with a line.
+     * Updates particle's velocity and little nudge to position.
+     * @param p particle to solve for
+     * @param pt1 first coordinate of the line
+     * @param pt2 second coordinate of the line
+    */
+    void solveParticleLine(Particle &p, Vector2 pt1, Vector2 pt2);
     
+    /**
+     * Solves the collision of a particle with a convex shape.
+     * Calls solveParticleLine().
+     * @param s shape
+     * @param p particle to solve for
+    */
+    void solveParticleShape(Shape &s, Particle &p);
+
     /**
      * Loops through particles list and solves the collitions
      * (using the solver functions).
     */
-    void checkCollisions();
+    void solveCollisions();
 
 public:
     /**

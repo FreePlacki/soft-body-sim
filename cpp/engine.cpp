@@ -15,7 +15,7 @@ Engine::Engine(Window &win) {
 
 // calls update on all particles and checks collisions
 void Engine::update() {
-    this->checkCollisions();
+    solveCollisions();
     for (auto &p : this->particles) {
         p.update();
         //cout << p.pos.y << "\n";
@@ -64,9 +64,13 @@ void Engine::mainLoop() {
 
 // calls draw on all entities
 void Engine::draw() {
+    //double energy = 0;
     for (Particle p : this->particles) {
         p.draw(win->getWin());
+        //energy += p.m * p.vel.length_sq();
+        //energy += p.m * 100 *(800-p.pos.y);
     }
+    //std::cout << energy << "\n";
 
     for (Shape s : this->shapes) {
         s.draw(win->getWin());
@@ -105,26 +109,28 @@ void Engine::initObjects() {
 }
 
 // solves a particle-wall collision
-Vector2 Engine::solveParticleWall(Particle &p, int width, int height) {
-    Vector2 new_vel(p.vel.x, p.vel.y);
+void Engine::solveParticleWall(Particle &p, int width, int height) {
+    //TODO push exactly out of the wall
     if (p.pos.y + p.r >= width
         ||  p.pos.y - p.r <= 0) {
-            new_vel.y *= -1;
+            p.vel.y *= -1;
+            // little push out of the wall
+            p.pos.y += p.vel.y/abs(p.vel.y)*2;
         }
     if (p.pos.x + p.r >= height
         ||  p.pos.x - p.r <= 0) {
-            new_vel.x *= -1;
+            p.vel.x *= -1;
+            // little push out of the wall
+            p.pos.x += p.vel.x/abs(p.vel.x)*2;
         }
-
-    return new_vel;
 }
 
 // solves a two-particle collision
-std::pair<Vector2, Vector2> Engine::solveBallCollision(Particle &p1, Particle &p2) {
+void Engine::solveParticleParticle(Particle &p1, Particle &p2) {
     // if they are not colliding return (0, 0) vectors (no velocity to substruct)
     if (!(abs(p1.pos.x - p2.pos.x) <= p1.r + p2.r
         &&  abs(p1.pos.y - p2.pos.y) <= p1.r + p2.r))
-        return std::make_pair(Vector2(0, 0), Vector2(0, 0));
+        return;
     
     Vector2 vel_diff1 = p1.vel - p2.vel;
     Vector2 pos_diff1 = p1.pos - p2.pos;
@@ -140,61 +146,69 @@ std::pair<Vector2, Vector2> Engine::solveBallCollision(Particle &p1, Particle &p
     double dist_sq2 = pos_diff2 * pos_diff2;
     Vector2 v2 = pos_diff2 * red_mass2 * dot2 / dist_sq2;
 
-    return std::make_pair(v1, v2);
+    //TODO push particles out
+    p1.vel -= v1;
+    p2.vel -= v2;
+}
+
+// solves particle-line collision
+void Engine::solveParticleLine(Particle &p, Vector2 pt1, Vector2 pt2) {
+    double line_len_sq = pt1.dist_sq(pt2);
+    double dx = (pt2.x - pt1.x);
+    double dy = (pt2.y - pt1.y);
+
+    // velocity component perpandicular to the line
+    Vector2 v_perpand(-(-p.vel.x*dy*dy + p.vel.y*dx*dy)/line_len_sq,
+                       (-p.vel.x*dx*dy + p.vel.y*dx*dx)/line_len_sq);
+
+    // substructing 2x perpandicular
+    v_perpand *= 2;
+    p.vel -= v_perpand;
+
+    // small nudge out of the line
+    p.pos.x += -(-p.vel.x*dy*dy + p.vel.y*dx*dy)/abs(-(-p.vel.x*dy*dy + p.vel.y*dx*dy))*2;
+    p.pos.y += (-p.vel.x*dx*dy + p.vel.y*dx*dx)/abs((-p.vel.x*dx*dy + p.vel.y*dx*dx))*2;
+}
+
+void Engine::solveParticleShape(Shape &s, Particle &p) {
+    // check collision
+    for (int point = 0; point < s.point_count; point++) {
+        // two points for a line (mod to loop back to first one time)
+        Vector2 pt1(s.points[point].x, s.points[point].y);
+        Vector2 pt2(s.points[(point+1) % s.point_count]);
+        // obtaining the absolute pos
+        pt1 += s.pos;
+        pt2 += s.pos;
+
+        // check bondries
+        if (p.pos.x <= s.bondries["right"]
+            && p.pos.x >= s.bondries["left"]
+            && p.pos.y >= s.bondries["top"]
+            && p.pos.y <= s.bondries["bottom"]) {
+            // distance to the line
+            double dist = abs((p.pos.x-pt1.x)*(-pt2.y+pt1.y) + (p.pos.y-pt1.y)*(pt2.x-pt1.x))
+                        / pt1.dist(pt2);
+            if (dist <= p.r) {
+                solveParticleLine(p, pt1, pt2);
+            }
+        }
+    }
 }
 
 // solves collisions for all particles
-void Engine::checkCollisions() {
+void Engine::solveCollisions() {
     for (int p1 = 0; p1 < particles.size(); p1++) {
         // wall collision
-        particles[p1].vel = solveParticleWall(particles[p1], win->getSize().first, win->getSize().second);
+        solveParticleWall(particles[p1], win->getSize().first, win->getSize().second);
 
         // particle collision
         for (int p2 = p1+1; p2 < particles.size(); p2++) {
-            std::pair<Vector2, Vector2> solved_vel = this->solveBallCollision(particles[p1], particles[p2]);
-            particles[p1].vel -= solved_vel.first;
-            particles[p2].vel -= solved_vel.second;
+            solveParticleParticle(particles[p1], particles[p2]);
         }
 
         //shape collision
         for (Shape s : shapes) {
-            Particle &p = particles[p1];
-            // check collision
-            for (int point = 0; point < s.point_count; point++) {
-                // two points for a line (mod to loop back to first one time)
-                Vector2 pt1(s.points[point].x, s.points[point].y);
-                Vector2 pt2(s.points[(point+1) % s.point_count]);
-                // obtaining the absolute pos
-                pt1 += s.pos;
-                pt2 += s.pos;
-
-                
-                // check bondries
-                if (p.pos.x <= s.bondries["right"]
-                 && p.pos.x >= s.bondries["left"]
-                 && p.pos.y >= s.bondries["top"]
-                 && p.pos.y <= s.bondries["bottom"]) {
-
-                // computing distance
-                    double line_len = pt1.dist(pt2);
-                    double line_len_sq = pt1.dist_sq(pt2);
-                    double dx = (pt2.x - pt1.x);
-                    double dy = (pt2.y - pt1.y);
-                    double dist = abs((p.pos.x-pt1.x)*(-pt2.y+pt1.y) + (p.pos.y-pt1.y)*(pt2.x-pt1.x))
-                                / line_len;
-                    if (dist <= p.r) {
-                        // TODO fix circle-shape collision response
-
-                        Vector2 v_perpand(-(-p.vel.x*dy*dy + p.vel.y*dx*dy)/line_len_sq,
-                                          (-p.vel.x*dx*dy + p.vel.y*dx*dx)/line_len_sq);
-
-                        v_perpand *= 2;
-                        p.vel -= v_perpand;
-                        p.pos.x += -(-p.vel.x*dy*dy + p.vel.y*dx*dy)/abs(-(-p.vel.x*dy*dy + p.vel.y*dx*dy))*2;
-                        p.pos.y += (-p.vel.x*dx*dy + p.vel.y*dx*dx)/abs((-p.vel.x*dx*dy + p.vel.y*dx*dx))*2;
-                    }
-                }
-            }
+            solveParticleShape(s, particles[p1]);
         }
     }
 }

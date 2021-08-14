@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cmath>
+#include <SFML/Graphics.hpp>
 
 
 class Vector2 {
@@ -20,6 +21,13 @@ public:
      * @param y the y coordinate
     */
     Vector2(double x, double y);
+
+    /**
+     * Class constructor for converting from sf::Vector2f.
+     * @param x the x coordinate
+     * @param y the y coordinate
+    */
+    Vector2(sf::Vector2f v);
 
     /**
      * Calculates the length of the vector (using sqrt function).

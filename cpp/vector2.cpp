@@ -12,6 +12,12 @@ Vector2::Vector2(double x, double y) {
     this->y = y;
 }
 
+// constructor for sf::Vector2f
+Vector2::Vector2(sf::Vector2f v) {
+    this->x = v.x;
+    this->y = v.y;
+}
+
 // vector length using sqrt
 double Vector2::length() {
     double s = this->x*this->x + this->y*this->y;

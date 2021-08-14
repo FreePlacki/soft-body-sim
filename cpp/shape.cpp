@@ -45,7 +45,7 @@ void Shape::draw(sf::RenderWindow &win) {
 
     polygon.setOutlineColor(sf::Color(this->outline_color));
     polygon.setFillColor(sf::Color(this->background_color));
-    polygon.setOutlineThickness(5);
+    polygon.setOutlineThickness(1);
     polygon.setPosition(this->pos.x, this->pos.y);
 
     win.draw(polygon);

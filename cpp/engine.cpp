@@ -88,13 +88,13 @@ void Engine::initObjects() {
     int win_width = this->win->getSize().first;
     int win_height = this->win->getSize().second;
 
-    Particle p1 = Particle(10, win_width/2, win_height/2, 100.0, 0.0);
-    Particle p2 = Particle(10, win_width/2+100.0, win_height/2, 100.0+50.0, 0.0);
-    Particle p3 = Particle(10, win_width/2+200.0, win_height/2, 100.0-50.0, 0.0);
+    Particle p1 = Particle(10, win_width/2, win_height/2-300, 100.0, 0.0);
+    Particle p2 = Particle(10, win_width/2+100.0, win_height/2-300, 100.0+50.0, 0.0);
+    Particle p3 = Particle(10, win_width/2+200.0, win_height/2-300, 100.0-50.0, 0.0);
     
     this->addParticle(p1);
-    //this->addParticle(p2);
-    //this->addParticle(p3);
+    this->addParticle(p2);
+    this->addParticle(p3);
 
     sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
     Shape rect1 = Shape(500, 600, 4, rect1_points);
@@ -158,15 +158,15 @@ void Engine::checkCollisions() {
 
         //shape collision
         for (Shape s : shapes) {
-            Particle p = particles[p1];
+            Particle &p = particles[p1];
             // check collision
             for (int point = 0; point < s.point_count; point++) {
                 // two points for a line (mod to loop back to first one time)
-                sf::Vector2f pt1 = s.points[point];
-                sf::Vector2f pt2 = s.points[(point+1) % s.point_count];
+                Vector2 pt1(s.points[point].x, s.points[point].y);
+                Vector2 pt2(s.points[(point+1) % s.point_count]);
                 // obtaining the absolute pos
-                pt1 += sf::Vector2f(s.pos.x, s.pos.y);
-                pt2 += sf::Vector2f(s.pos.x, s.pos.y);
+                pt1 += s.pos;
+                pt2 += s.pos;
 
                 
                 // check bondries
@@ -176,12 +176,23 @@ void Engine::checkCollisions() {
                  && p.pos.y <= s.bondries["bottom"]) {
 
                 // computing distance
-                double dist = abs((p.pos.x-pt1.x)*(-pt2.y+pt1.y) + (p.pos.y-pt1.y)*(pt2.x-pt1.x))
-                            / sqrt((-pt2.y+pt1.y)*(-pt2.y+pt1.y) + (pt2.x-pt1.x)*(pt2.x-pt1.x));
-                //std::cout << dist << "\n";
-                if (dist <= p.r) {
-                    std::cout << "collision\n";
-                }
+                    double line_len = pt1.dist(pt2);
+                    double line_len_sq = pt1.dist_sq(pt2);
+                    double dx = (pt2.x - pt1.x);
+                    double dy = (pt2.y - pt1.y);
+                    double dist = abs((p.pos.x-pt1.x)*(-pt2.y+pt1.y) + (p.pos.y-pt1.y)*(pt2.x-pt1.x))
+                                / line_len;
+                    if (dist <= p.r) {
+                        // TODO fix circle-shape collision response
+
+                        Vector2 v_perpand(-(-p.vel.x*dy*dy + p.vel.y*dx*dy)/line_len_sq,
+                                          (-p.vel.x*dx*dy + p.vel.y*dx*dx)/line_len_sq);
+
+                        v_perpand *= 2;
+                        p.vel -= v_perpand;
+                        p.pos.x += -(-p.vel.x*dy*dy + p.vel.y*dx*dy)/abs(-(-p.vel.x*dy*dy + p.vel.y*dx*dy))*2;
+                        p.pos.y += (-p.vel.x*dx*dy + p.vel.y*dx*dx)/abs((-p.vel.x*dx*dy + p.vel.y*dx*dx))*2;
+                    }
                 }
             }
         }

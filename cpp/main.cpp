@@ -1,7 +1,7 @@
 /**
  * SFML app for simulating soft body interactions.
  * @file main.cpp
- * @version dev 12/08/2021
+ * @version dev 15/08/2021
 */
 
 #include <SFML/Graphics.hpp>
@@ -16,7 +16,7 @@
 
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 800
-#define MAX_FPS 60
+#define MAX_FPS 120
 
 // TODO add small function comments
 

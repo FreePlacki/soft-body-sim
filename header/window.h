@@ -36,17 +36,17 @@ public:
      * Getter for window's dimensions.
      * @return std::pair<int, int> with window's width and height
     */
-    std::pair<int, int> getSize();
+    std::pair<int, int> getSize() const;
 
     /**
      * Getter for window's title.
      * @return std::string window's title
     */
-    std::string getTitle();
+    std::string getTitle() const;
 
     /**
      * Getter for window's max fps.
      * @return int max window's fps
     */
-    int getFps();
+    int getFps() const;
 };

@@ -23,6 +23,9 @@ private:
     // lost of all shapes
     std::vector<Shape> shapes;
 
+    // calculated fps. Starts with max fps value
+    int fps;
+
     /**
      * Initializes graphical objects (called at construction).
     */
@@ -54,7 +57,7 @@ private:
      * @param pt1 first coordinate of the line
      * @param pt2 second coordinate of the line
     */
-    void solveParticleLine(Particle &p, Vector2 pt1, Vector2 pt2);
+    void solveParticleLine(Particle &p, Vector2 &pt1, Vector2 &pt2);
     
     /**
      * Solves the collision of a particle with a convex shape.
@@ -85,7 +88,7 @@ public:
     /**
      * Calls the draw method for all the particles.
     */
-    void draw();
+    void draw() const;
 
     /**
      * Contains the main while loop of the program.
@@ -96,23 +99,23 @@ public:
      * Adds a Particle object to the particles vector.
      * @param p particle to add
     */
-    void addParticle(Particle &p);
+    void addParticle(const Particle &p);
 
     /**
      * Adds a Shape object to the shapes vector.
      * @param s shape to add
     */
-    void addShape(Shape &s);
+    void addShape(const Shape &s);
 
     /**
      * Getter method for the particles vector.
      * @return particles vector
     */
-    std::vector<Particle>& getParticles();
+    std::vector<Particle> getParticles() const;
 
     /**
      * Getter method for the shapes vector.
      * @return shapes vector
     */
-    std::vector<Shape>& getShapes();
+    std::vector<Shape> getShapes() const;
 };

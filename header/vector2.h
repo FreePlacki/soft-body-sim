@@ -27,20 +27,20 @@ public:
      * @param x the x coordinate
      * @param y the y coordinate
     */
-    Vector2(sf::Vector2f v);
+    Vector2(const sf::Vector2f &v);
 
     /**
      * Calculates the length of the vector (using sqrt function).
      * @return double length
     */
-    double length();
+    double length() const;
 
     /**
      * Calculates the length^2 of the vector
      * (faster than normal length - no sqrt).
      * @return double length squared
     */
-    double length_sq();
+    double length_sq() const;
 
     /**
      * Calculates the distance to the second vector
@@ -48,7 +48,7 @@ public:
      * @param v second vector to compare
      * @return double distance between vectors
     */
-    double dist(Vector2 &v);
+    double dist(const Vector2 &v) const;
 
     /**
      * Calculates the distance^2 to the second vector
@@ -56,7 +56,7 @@ public:
      * @param v second vector to compare
      * @return double distance squared between vectors
     */
-    double dist_sq(Vector2 &v);
+    double dist_sq(const Vector2 &v) const;
 
     /**
      * Scales the vector down if it's larger than a specified value.
@@ -69,47 +69,47 @@ public:
      * @param v second vector to add
      * @return Vector2 the sum of two vectors
     */
-    Vector2 operator+(Vector2 &v);
+    Vector2 operator+(const Vector2 &v) const;
 
     /**
      * Operator overload for substructing two vectors.
      * @param v second vector to substruct
      * @return Vector2 the difference of two vectors
     */
-    Vector2 operator-(Vector2 &v);
+    Vector2 operator-(const Vector2 &v) const;
 
     /**
      * Operator overload for the cross product of two vectors.
      * @param v second vector to compare
      * @return double the result of the cross product
     */
-    double operator*(Vector2 &v);
+    double operator*(const Vector2 &v) const;
 
     /**
      * Operator overload for multiplying by a scalar.
      * @param a a number to multiply by
      * @return Vector2 the result of scalar multiplication
     */
-    Vector2 operator*(double a);
+    Vector2 operator*(double a) const;
 
     /**
      * Operator overload for dividing by a scalar.
      * @param a a number to divide by
      * @return Vector2 the result of scalar division
     */
-    Vector2 operator/(double a);
+    Vector2 operator/(double a) const;
 
     /**
      * Operator overload for adding to a vector
      * @param v a vector to add
     */
-    void operator+=(Vector2 &v);
+    void operator+=(const Vector2 &v);
 
     /**
      * Operator overload for substructing from a vector
      * @param v a vector to substruct
     */
-    void operator-=(Vector2 &v);
+    void operator-=(const Vector2 &v);
 
     /**
      * Operator overload for multiplying a vector

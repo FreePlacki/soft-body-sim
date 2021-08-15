@@ -37,7 +37,7 @@ Shape::Shape(int x, int y, int point_count, sf::Vector2f points[MAX_POINT_COUNT]
 }
 
 // draws the shape to the window
-void Shape::draw(sf::RenderWindow &win) {
+void Shape::draw(sf::RenderWindow &win) const{
     sf::ConvexShape polygon(this->point_count);
     for (int i = 0; i < this->point_count; i++) {
         polygon.setPoint(i, this->points[i]);

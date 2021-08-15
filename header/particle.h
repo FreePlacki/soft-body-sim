@@ -37,12 +37,13 @@ public:
     
     /**
      * Applies forces and updates position and velocity.
+     * @param fps current fps
     */
-    void update();
+    void update(int fps);
 
     /**
      * Draws a particle (circle) to the window.
      * @param win window to draw on
     */
-    void draw(sf::RenderWindow &win);
+    void draw(sf::RenderWindow &win) const;
 };

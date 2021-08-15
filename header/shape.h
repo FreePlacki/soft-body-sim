@@ -45,5 +45,5 @@ public:
      * Draws the shape to the window.
      * @param win window to draw on
     */
-    void draw(sf::RenderWindow &win);
+    void draw(sf::RenderWindow &win) const;
 };

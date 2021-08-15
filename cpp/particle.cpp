@@ -17,21 +17,21 @@ Particle::Particle(int r, double x, double y, double vx, double vy, double m, ui
 }
 
 // applies force and updates pos and vel
-void Particle::update() {
+void Particle::update(int fps) {
     const int g = 100;
 
     Vector2 force = Vector2(0, this->m * g);
     Vector2 acc = force / this->m;
 
-    Vector2 dv = acc*1/60;
-    Vector2 dp = this->vel*1/60;
+    Vector2 dv = acc*1/fps;
+    Vector2 dp = this->vel*1/fps;
     this->vel += dv;
     this->pos += dp;
     // std::cout << dt << "\n";
 }
 
 // draws circle to the window
-void Particle::draw(sf::RenderWindow &win) {
+void Particle::draw(sf::RenderWindow &win) const {
     sf::CircleShape circ(this->r);
     circ.setFillColor(sf::Color(this->color));
     circ.setOrigin(this->r, this->r);

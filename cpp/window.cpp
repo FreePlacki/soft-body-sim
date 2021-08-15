@@ -23,16 +23,16 @@ sf::RenderWindow& Window::getWin() {
 }
 
 // width and height getter
-std::pair<int, int> Window::getSize() {
+std::pair<int, int> Window::getSize() const {
     return std::make_pair(this->width, this->height);
 }
 
 // title getter
-std::string Window::getTitle() {
+std::string Window::getTitle() const {
     return this->title;
 }
 
 // max fps getter
-int Window::getFps() {
+int Window::getFps() const {
     return this->fps;
 }

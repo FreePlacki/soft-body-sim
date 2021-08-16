@@ -69,9 +69,10 @@ void Engine::draw() const {
     //double energy = 0;
     for (const Particle &p : particles) {
         p.draw(win->getWin());
-        //energy += p.m * p.vel.length_sq();
+        //energy += 0.5*p.m * p.vel.length_sq();
         //energy += p.m * 100 *(800-p.pos.y);
     }
+    // TODO the total energy is increasing
     //std::cout << energy << "\n";
 
     for (const Shape &s : shapes) {

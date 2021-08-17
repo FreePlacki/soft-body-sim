@@ -3,7 +3,7 @@
  * @file particle.cpp
 */
 
-#include "../header/particle.h"
+#include "particle.h"
 #include <iostream>
 
 

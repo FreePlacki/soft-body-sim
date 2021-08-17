@@ -3,7 +3,7 @@
  * @file shape.cpp
 */
 
-#include "../header/shape.h"
+#include "shape.h"
 #include <iostream>
 
 

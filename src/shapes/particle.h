@@ -7,7 +7,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "vector2.h"
+#include "../math/vector2.h"
 
 class Particle {
 public:

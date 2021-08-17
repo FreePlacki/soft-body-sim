@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "particle.h"
-#include "shape.h"
+#include "../shapes/particle.h"
+#include "../shapes/shape.h"
 #include "window.h"
 #include <vector>
 #include <iostream>

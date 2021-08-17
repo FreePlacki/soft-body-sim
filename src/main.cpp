@@ -4,9 +4,9 @@
  * @version dev 15/08/2021
 */
 
-#include "../header/window.h"
-#include "../header/engine.h"
-#include "../header/fileManager.h"
+#include "engine/window.h"
+#include "engine/engine.h"
+#include "engine/fileManager.h"
 
 
 int main() {

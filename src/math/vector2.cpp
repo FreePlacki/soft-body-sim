@@ -3,7 +3,7 @@
  * @file vector2.cpp
 */
 
-#include "../header/vector2.h"
+#include "vector2.h"
 
 
 // constructor

@@ -1,27 +1,27 @@
 output: main.o particle.o vector2.o window.o engine.o shape.o fileManager.o
-	g++ main.o particle.o vector2.o window.o engine.o shape.o fileManager.o -o soft-body-sim -lsfml-graphics -lsfml-window -lsfml-system
-	soft-body-sim.exe
+	g++ main.o particle.o vector2.o window.o engine.o shape.o fileManager.o -o bin/soft-body-sim.exe -B bin -g -Wall -lsfml-graphics -lsfml-window -lsfml-system
+	bin\soft-body-sim.exe
 
-main.o: cpp/main.cpp
-	g++ -c -Isrc/include cpp/main.cpp
+main.o: src/main.cpp
+	g++ -c src/main.cpp
 
-particle.o: cpp/particle.cpp header/particle.h
-	g++ -c cpp/particle.cpp
+particle.o: src/shapes/particle.cpp src/shapes/particle.h
+	g++ -c src/shapes/particle.cpp
 
-vector2.o: cpp/vector2.cpp header/vector2.h
-	g++ -c cpp/vector2.cpp
+vector2.o: src/math/vector2.cpp src/math/vector2.h
+	g++ -c src/math/vector2.cpp
 
-window.o: cpp/window.cpp header/window.h
-	g++ -c cpp/window.cpp
+window.o: src/engine/window.cpp src/engine/window.h
+	g++ -c src/engine/window.cpp
 
-engine.o: cpp/engine.cpp header/engine.h
-	g++ -c cpp/engine.cpp
+engine.o: src/engine/engine.cpp src/engine/engine.h
+	g++ -c src/engine/engine.cpp
 
-shape.o: cpp/shape.cpp header/shape.h
-	g++ -c cpp/shape.cpp
+shape.o: src/shapes/shape.cpp src/shapes/shape.h
+	g++ -c src/shapes/shape.cpp
 
-fileManager.o: cpp/fileManager.cpp header/fileManager.h
-	g++ -c cpp/fileManager.cpp
+fileManager.o: src/engine/fileManager.cpp src/engine/fileManager.h
+	g++ -c src/engine/fileManager.cpp
 
 clean:
 	del *.o

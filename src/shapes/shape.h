@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "vector2.h"
+#include "../math/vector2.h"
 #include <SFML/Graphics.hpp>
 
 

@@ -3,7 +3,7 @@
  * @file window.cpp
 */
 
-#include "../header/window.h"
+#include "window.h"
 
 
 // constructor

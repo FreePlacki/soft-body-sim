@@ -6,7 +6,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "particle.h"
+#include "../shapes/particle.h"
 #include <string>
 
 

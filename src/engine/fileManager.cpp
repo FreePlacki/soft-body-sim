@@ -3,7 +3,7 @@
  * @file fileManager.cpp
 */
 
-#include "../header/fileManager.h"
+#include "fileManager.h"
 
 
 void FileManager::saveCurrentSettings(const std::map<std::string, int>  &settings) const {

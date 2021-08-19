@@ -1,27 +1,31 @@
-output: main.o particle.o vector2.o window.o engine.o shape.o fileManager.o
-	g++ main.o particle.o vector2.o window.o engine.o shape.o fileManager.o -o bin/soft-body-sim.exe -B bin -g -Wall -lsfml-graphics -lsfml-window -lsfml-system
+CC = g++
+CFLAGS = -Wall -g
+
+bin\soft-body-sim: main.o particle.o vector2.o window.o engine.o shape.o fileManager.o
+	$(CC) $^ -o $@ $(CFLAGS) -lsfml-graphics -lsfml-window -lsfml-system
 	bin\soft-body-sim.exe
+	make clean
 
 main.o: src/main.cpp
-	g++ -c src/main.cpp
+	$(CC) -c $^ $(CFLAGS)
 
-particle.o: src/shapes/particle.cpp src/shapes/particle.h
-	g++ -c src/shapes/particle.cpp
+particle.o: src/shapes/particle.cpp
+	$(CC) -c $^ $(CFLAGS)
 
-vector2.o: src/math/vector2.cpp src/math/vector2.h
-	g++ -c src/math/vector2.cpp
+vector2.o: src/math/vector2.cpp
+	$(CC) -c $^ $(CFLAGS)
 
-window.o: src/engine/window.cpp src/engine/window.h
-	g++ -c src/engine/window.cpp
+window.o: src/engine/window.cpp
+	$(CC) -c $^ $(CFLAGS)
 
-engine.o: src/engine/engine.cpp src/engine/engine.h
-	g++ -c src/engine/engine.cpp
+engine.o: src/engine/engine.cpp
+	$(CC) -c $^ $(CFLAGS)
 
-shape.o: src/shapes/shape.cpp src/shapes/shape.h
-	g++ -c src/shapes/shape.cpp
+shape.o: src/shapes/shape.cpp
+	$(CC) -c $^ $(CFLAGS)
 
-fileManager.o: src/engine/fileManager.cpp src/engine/fileManager.h
-	g++ -c src/engine/fileManager.cpp
+fileManager.o: src/engine/fileManager.cpp
+	$(CC) -c $^ $(CFLAGS)
 
 clean:
 	del *.o

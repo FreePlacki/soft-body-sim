@@ -1,16 +1,15 @@
 /**
  * SFML app for simulating soft body interactions.
  * @file main.cpp
- * @version dev 15/08/2021
+ * @version dev 18/08/2021
 */
 
 #include "engine/window.h"
 #include "engine/engine.h"
 #include "engine/fileManager.h"
 
-
+// TODO construct a class Body containing array of particles arranged in a shape
 int main() {
-    // TODO implement a wrapper for those operations
     FileManager f;
 
     Window win(f.getCurrentSettings());

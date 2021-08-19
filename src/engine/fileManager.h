@@ -13,7 +13,7 @@
 
 class FileManager {
 private:
-    std::string SETTINGS = "data/settings.txt";
+    const std::string SETTINGS = "data/settings.txt";
 public:
     /**
      * Saves the settings map to settings.txt file

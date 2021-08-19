@@ -37,5 +37,6 @@ const std::map<std::string, int> FileManager::getCurrentSettings() const {
         return settings;
     } else {
         std::cout << "Error opening a file: " << SETTINGS << std::endl;
+        return std::map<std::string, int> {};
     }
 }

@@ -37,11 +37,8 @@ void Engine::mainLoop() {
     while (win->getWin().isOpen()) {
         sf::Event event;
         while (win->getWin().pollEvent(event)) {
-            switch(event.type) {
-                case sf::Event::Closed:
-                    win->getWin().close();
-                    break;
-            }
+            if (event.type == sf::Event::Closed)
+                win->getWin().close();
         }
         // drawing process
         win->getWin().clear();
@@ -198,12 +195,12 @@ void Engine::solveParticleShape(Shape &s, Particle &p) {
 
 // solves collisions for all particles
 void Engine::solveCollisions() {
-    for (int p1 = 0; p1 < particles.size(); p1++) {
+    for (size_t p1 = 0; p1 < particles.size(); p1++) {
         // wall collision
         solveParticleWall(particles[p1], win->getSize().first, win->getSize().second);
 
         // particle collision
-        for (int p2 = p1+1; p2 < particles.size(); p2++) {
+        for (size_t p2 = p1+1; p2 < particles.size(); p2++) {
             solveParticleParticle(particles[p1], particles[p2]);
         }
 

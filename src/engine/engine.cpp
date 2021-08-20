@@ -19,7 +19,6 @@ void Engine::update() {
     solveCollisions();
     for (Particle &p : particles) {
         p.update(this->fps);
-        //cout << p.pos.y << "\n";
     }
 }
 
@@ -149,7 +148,7 @@ void Engine::solveParticleParticle(Particle &p1, Particle &p2) {
 }
 
 // solves particle-line collision
-void Engine::solveParticleLine(Particle &p, Vector2 &pt1, Vector2 &pt2) {
+void Engine::solveParticleLine(Particle &p, const Vector2 &pt1, const Vector2 &pt2) {
     // if dist > radius return
     double dist = abs((p.pos.x-pt1.x)*(-pt2.y+pt1.y) + (p.pos.y-pt1.y)*(pt2.x-pt1.x))
                         / pt1.dist(pt2);
@@ -173,7 +172,7 @@ void Engine::solveParticleLine(Particle &p, Vector2 &pt1, Vector2 &pt2) {
     p.pos.y -= sign(v_perpand.y)*(p.r-dist);
 }
 
-void Engine::solveParticleShape(Shape &s, Particle &p) {
+void Engine::solveParticleShape(const Shape &s, Particle &p) {
     // check collision
     for (int point = 0; point < s.point_count; point++) {
         // two points for a line (mod to loop back to first one time)
@@ -184,10 +183,10 @@ void Engine::solveParticleShape(Shape &s, Particle &p) {
         pt2 += s.pos;
 
         // check bondries
-        if (p.pos.x <= s.bondries["right"]
-            && p.pos.x >= s.bondries["left"]
-            && p.pos.y >= s.bondries["top"]
-            && p.pos.y <= s.bondries["bottom"]) {
+        if (p.pos.x <= s.bondries.at("right")
+            && p.pos.x >= s.bondries.at("left")
+            && p.pos.y >= s.bondries.at("top")
+            && p.pos.y <= s.bondries.at("bottom")) {
             solveParticleLine(p, pt1, pt2);
         }
     }
@@ -205,7 +204,7 @@ void Engine::solveCollisions() {
         }
 
         //shape collision
-        for (Shape &s : shapes) {
+        for (const Shape &s : shapes) {
             solveParticleShape(s, particles[p1]);
         }
     }

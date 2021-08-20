@@ -57,7 +57,7 @@ private:
      * @param pt1 first coordinate of the line
      * @param pt2 second coordinate of the line
     */
-    void solveParticleLine(Particle &p, Vector2 &pt1, Vector2 &pt2);
+    void solveParticleLine(Particle &p, const Vector2 &pt1, const Vector2 &pt2);
     
     /**
      * Solves the collision of a particle with a convex shape.
@@ -65,7 +65,7 @@ private:
      * @param s shape
      * @param p particle to solve for
     */
-    void solveParticleShape(Shape &s, Particle &p);
+    void solveParticleShape(const Shape &s, Particle &p);
 
     /**
      * Loops through particles list and solves the collitions

@@ -8,7 +8,7 @@
 #include "engine/engine.h"
 #include "engine/fileManager.h"
 
-// TODO construct a class Body containing array of particles arranged in a shape
+// TODO static keyword
 int main() {
     FileManager f;
 

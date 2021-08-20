@@ -8,16 +8,24 @@
 
 
 // constructor
-Shape::Shape(int x, int y, int point_count, sf::Vector2f points[MAX_POINT_COUNT], uint32_t outline_color, uint32_t background_color) {
+Shape::Shape(int x, int y, int point_count, const std::vector<sf::Vector2f> &points, uint32_t outline_color, uint32_t background_color) {
     this->pos = Vector2(x, y);
     this->point_count = point_count;
+    this->points = points;
     this->outline_color = outline_color;
     this->background_color = background_color;
 
-    for (int i = 0; i < point_count; i++) {
-        this->points[i] = points[i];
+    setBondries(points, point_count);
+}
 
-        // setting bondries
+std::vector<sf::Vector2f> Shape::makeRect(int x, int y, int width, int height) {
+    std::vector<sf::Vector2f> pts = {sf::Vector2f(x, y), sf::Vector2f(x+width, y), sf::Vector2f(x+width, y+height), sf::Vector2f(x, y+height)};
+    return pts;
+}
+
+// setting shape's bondries
+void Shape::setBondries(const std::vector<sf::Vector2f> &points, int point_count) {
+    for (int i = 0; i < point_count; i++) {
         int x = points[i].x + this->pos.x;
         int y = points[i].y + this->pos.y;
         if (this->bondries["right"] == -1

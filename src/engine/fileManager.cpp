@@ -5,8 +5,9 @@
 
 #include "fileManager.h"
 
+const std::string FileManager::SETTINGS = "data/settings.txt";
 
-void FileManager::saveCurrentSettings(const std::map<std::string, int>  &settings) const {
+void FileManager::saveCurrentSettings(const std::map<std::string, int>  &settings) {
     std::fstream file(SETTINGS, std::ios::out);
     if (file.is_open()) {
         for (const auto &x : settings) {
@@ -21,7 +22,7 @@ void FileManager::saveCurrentSettings(const std::map<std::string, int>  &setting
     }
 }
 
-const std::map<std::string, int> FileManager::getCurrentSettings() const {
+const std::map<std::string, int> FileManager::getCurrentSettings() {
     std::fstream file1(SETTINGS, std::ios::in);
     if (file1.is_open()) {
         std::map<std::string, int> settings;

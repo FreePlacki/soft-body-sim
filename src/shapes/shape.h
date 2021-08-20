@@ -45,11 +45,9 @@ public:
      * Returns points needed to make a rectangle
      * @param x x position
      * @param y y position
-     * @param width rectangle's width
-     * @param height rectangle's height
      * @return sf::Vector2f array of point coordinates
     */
-    static std::vector<sf::Vector2f> makeRect(int x, int y, int width, int height);    
+    static std::vector<sf::Vector2f> makeRect(int width, int height);    
 
     /**
      * Draws the shape to the window.

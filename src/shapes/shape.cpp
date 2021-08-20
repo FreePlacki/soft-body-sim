@@ -18,8 +18,8 @@ Shape::Shape(int x, int y, int point_count, const std::vector<sf::Vector2f> &poi
     setBondries(points, point_count);
 }
 
-std::vector<sf::Vector2f> Shape::makeRect(int x, int y, int width, int height) {
-    std::vector<sf::Vector2f> pts = {sf::Vector2f(x, y), sf::Vector2f(x+width, y), sf::Vector2f(x+width, y+height), sf::Vector2f(x, y+height)};
+std::vector<sf::Vector2f> Shape::makeRect(int width, int height) {
+    std::vector<sf::Vector2f> pts = {sf::Vector2f(0, 0), sf::Vector2f(width, 0), sf::Vector2f(width, height), sf::Vector2f(0, height)};
     return pts;
 }
 

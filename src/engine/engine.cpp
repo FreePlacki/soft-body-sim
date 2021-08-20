@@ -100,7 +100,7 @@ void Engine::initObjects() {
     addParticle(p3);
 
     // sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
-    std::vector<sf::Vector2f> rect1_points = Shape::makeRect(500, 600, 100, 50);
+    std::vector<sf::Vector2f> rect1_points = Shape::makeRect(100, 50);
     Shape rect1 = Shape(500, 600, 4, rect1_points);
     std::vector<sf::Vector2f> rect2_points = {sf::Vector2f(0, 0), sf::Vector2f(300, 150), sf::Vector2f(0, 300), sf::Vector2f(-300, 150)};
     Shape rect2 = Shape(200, 200, 4, rect2_points);

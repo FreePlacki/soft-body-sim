@@ -11,7 +11,7 @@ class Body {
 private:
     std::vector<Particle> particles;
     // shape particles form at initial time
-    Shape shape = Shape(0, 0, 0, 0);
+    Shape shape = Shape(0, 0, 0, Shape::makeRect(0,0));
     int particle_r, particle_spacing;
 
 public:

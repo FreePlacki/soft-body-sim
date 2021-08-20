@@ -17,6 +17,7 @@ public:
     double m;
     // integer color format
     uint32_t color;
+    // TODO add vector of reference wrappers of particles connected by a spring
     
     // position
     Vector2 pos = Vector2(0, 0);

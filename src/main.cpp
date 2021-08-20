@@ -8,7 +8,7 @@
 #include "engine/engine.h"
 #include "engine/fileManager.h"
 
-// TODO static keyword
+
 int main() {
     FileManager f;
 

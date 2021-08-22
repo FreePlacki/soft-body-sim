@@ -25,7 +25,7 @@ public:
         {"left", -1},
         {"right", -1}
     };
-    // TODO implement rotation
+
     // uint32_t format to convert to sf::Color
     uint32_t outline_color;
     uint32_t background_color;

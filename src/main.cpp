@@ -1,7 +1,7 @@
 /**
  * SFML app for simulating soft body interactions.
  * @file main.cpp
- * @version dev 18/08/2021
+ * @version dev 22/08/2021
 */
 
 #include "engine/window.h"

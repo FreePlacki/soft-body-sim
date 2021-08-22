@@ -4,7 +4,6 @@ CFLAGS = -Wall -g
 bin\soft-body-sim: main.o particle.o vector2.o window.o engine.o shape.o fileManager.o body.o
 	$(CC) $^ -o $@ $(CFLAGS) -lsfml-graphics -lsfml-window -lsfml-system
 	bin\soft-body-sim.exe
-	make clean
 
 main.o: src/main.cpp
 	$(CC) -c $^ $(CFLAGS)
@@ -31,4 +30,4 @@ body.o: src/shapes/body.cpp
 	$(CC) -c $^ $(CFLAGS)
 
 clean:
-	del *.o
+	rm *.o

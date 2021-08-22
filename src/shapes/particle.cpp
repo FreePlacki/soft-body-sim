@@ -42,3 +42,8 @@ void Particle::draw(sf::RenderWindow &win) const {
 
     win.draw(circ);
 }
+
+// TODO fix this
+// void Particle::connect(std::shared_ptr<Particle> p) const {
+//     this->connected.push_back(p);
+// }

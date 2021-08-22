@@ -8,6 +8,8 @@
 
 #include <SFML/Graphics.hpp>
 #include "../math/vector2.h"
+#include <memory>
+
 
 class Particle {
 public:
@@ -17,12 +19,14 @@ public:
     double m;
     // integer color format
     uint32_t color;
-    // TODO add vector of reference wrappers of particles connected by a spring
     
     // position
     Vector2 pos = Vector2(0, 0);
     // velocity
     Vector2 vel = Vector2(0, 0);
+
+    // particles that are connected by a spring force
+    std::vector<std::shared_ptr<Particle>> connected;
 
     /**
      * Class constructor.
@@ -47,4 +51,6 @@ public:
      * @param win window to draw on
     */
     void draw(sf::RenderWindow &win) const;
+
+    void connect(const Particle &p) const;
 };

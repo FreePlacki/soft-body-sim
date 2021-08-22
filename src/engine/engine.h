@@ -5,6 +5,8 @@
 
 #pragma once
 
+
+#include <SFML/Window/Event.hpp>
 #include "../shapes/particle.h"
 #include "../shapes/shape.h"
 #include "window.h"
@@ -18,10 +20,10 @@ private:
     Window *win;
 
     // list of all Particle objects
-    std::vector<Particle> particles;
+    std::vector<std::shared_ptr<Particle>> particles;
 
     // lost of all shapes
-    std::vector<Shape> shapes;
+    std::vector<std::shared_ptr<Shape>> shapes;
 
     // calculated fps. Starts with max fps value
     int fps;
@@ -38,7 +40,7 @@ private:
      * @param width screen width
      * @param height screen height
     */
-    void solveParticleWall(Particle &p, int width, int height);
+    void solveParticleWall(std::shared_ptr<Particle> p, int width, int height);
 
     /**
      * Solves the collision of two particles.
@@ -48,7 +50,7 @@ private:
      * @param p2 particle two
      * @return std::pair<Vector2, Vector2> of the new velocities
     */
-    void solveParticleParticle(Particle &p1, Particle &p2);
+    void solveParticleParticle(std::shared_ptr<Particle> p1, std::shared_ptr<Particle> p2);
 
     /**
      * Solves the collision of a particle with a line.
@@ -57,7 +59,7 @@ private:
      * @param pt1 first coordinate of the line
      * @param pt2 second coordinate of the line
     */
-    void solveParticleLine(Particle &p, const Vector2 &pt1, const Vector2 &pt2);
+    void solveParticleLine(std::shared_ptr<Particle> p, const Vector2 &pt1, const Vector2 &pt2);
     
     /**
      * Solves the collision of a particle with a convex shape.
@@ -65,7 +67,7 @@ private:
      * @param s shape
      * @param p particle to solve for
     */
-    void solveParticleShape(const Shape &s, Particle &p);
+    void solveParticleShape(std::shared_ptr<Shape> s, std::shared_ptr<Particle> p);
 
     /**
      * Loops through particles list and solves the collitions
@@ -99,23 +101,23 @@ public:
      * Adds a Particle object to the particles vector.
      * @param p particle to add
     */
-    void addParticle(const Particle &p);
+    void addParticle(std::shared_ptr<Particle> p);
 
     /**
      * Adds a Shape object to the shapes vector.
      * @param s shape to add
     */
-    void addShape(const Shape &s);
+    void addShape(std::shared_ptr<Shape> s);
 
     /**
      * Getter method for the particles vector.
      * @return particles vector
     */
-    std::vector<Particle> getParticles() const;
+    auto getParticles() const;
 
     /**
      * Getter method for the shapes vector.
      * @return shapes vector
     */
-    std::vector<Shape> getShapes() const;
+    auto getShapes() const;
 };

@@ -21,6 +21,11 @@ void Particle::update(int fps) {
     const int g = 100;
 
     Vector2 force = Vector2(0, this->m * g);
+    for (auto p : this->connected) {
+        // TODO add spring force
+        
+    }
+
     Vector2 acc = force / this->m;
 
     Vector2 dv = acc*1/fps;
@@ -37,13 +42,23 @@ void Particle::draw(sf::RenderWindow &win) const {
     circ.setOrigin(this->r, this->r);
     circ.setPosition(this->pos.x, this->pos.y);
 
-    // std::cout << this->color << "\n";
-    // std::cout << sf::Color(sf::Color::Red.toInteger()) << "\n";
+    for (auto p : connected) {
+        sf::Vertex line[] = {
+            sf::Vertex(sf::Vector2f(this->pos.x, this->pos.y), sf::Color::White),
+            sf::Vertex(sf::Vector2f(p->pos.x, p->pos.y), sf::Color::White),
+        };
+
+        win.draw(line, 2, sf::Lines);
+    }
 
     win.draw(circ);
 }
 
-// TODO fix this
-// void Particle::connect(std::shared_ptr<Particle> p) const {
-//     this->connected.push_back(p);
-// }
+// connects with another particle
+void Particle::connect(std::shared_ptr<Particle> p) {
+    std::shared_ptr<Particle> this_p(this);
+
+    this_p->connected.push_back(p);
+    // add this particle to the other's list also
+    (*p).connected.push_back(this_p);
+}

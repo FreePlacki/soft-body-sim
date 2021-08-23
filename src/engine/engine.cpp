@@ -91,13 +91,15 @@ void Engine::initObjects() {
     int win_width = win->getSize().first;
     int win_height = win->getSize().second;
 
-    std::shared_ptr<Particle> p1 = std::make_unique<Particle>(10, win_width/2, win_height/2-300, 100.0, 0.0);
-    std::shared_ptr<Particle> p2 = std::make_unique<Particle>(10, win_width/2+100.0, win_height/2-300, 100.0+50.0, 0.0);
-    std::shared_ptr<Particle> p3 = std::make_unique<Particle>(10, win_width/2+200.0, win_height/2-300, 100.0-50.0, 0.0);
+    std::shared_ptr<Particle> p1 = std::make_shared<Particle>(10, win_width/2, win_height/2-300, 100.0, 0.0);
+    std::shared_ptr<Particle> p2 = std::make_shared<Particle>(10, win_width/2+100.0, win_height/2-300, 100.0+50.0, 0.0);
+    std::shared_ptr<Particle> p3 = std::make_shared<Particle>(10, win_width/2+200.0, win_height/2-300, 100.0-50.0, 0.0);
     
     addParticle(p1);
     addParticle(p2);
     addParticle(p3);
+
+    (*p1).connect(p2);
 
     // sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
     std::vector<sf::Vector2f> rect1_points = Shape::makeRect(100, 50);

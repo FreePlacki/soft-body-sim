@@ -30,6 +30,12 @@ public:
     Vector2(const sf::Vector2f &v);
 
     /**
+     * Converts to sf::Vector2f
+     * @return sf::Vector2f with same x and y values
+    */
+    sf::Vector2f to_sf();
+
+    /**
      * Calculates the length of the vector (using sqrt function).
      * @return double length
     */

@@ -52,5 +52,10 @@ public:
     */
     void draw(sf::RenderWindow &win) const;
 
-    void connect(const Particle &p) const;
+    /**
+     * Adds a particle to the connectes list.
+     * Particles connected interact by a spring force.
+     * @param p particle to connect to
+    */
+    void connect(std::shared_ptr<Particle> p);
 };

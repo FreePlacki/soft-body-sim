@@ -18,6 +18,11 @@ Vector2::Vector2(const sf::Vector2f &v) {
     this->y = v.y;
 }
 
+// convert to sf::Vector2f
+sf::Vector2f Vector2::to_sf() {
+    return sf::Vector2f(this->x, this->y);
+}
+
 // vector length using sqrt
 double Vector2::length() const {
     double s = this->x*this->x + this->y*this->y;

@@ -14,11 +14,11 @@
 class Particle {
 public:
     // radius
-    int r;
+    const int r;
     // mass
-    double m;
+    const double m;
     // integer color format
-    uint32_t color;
+    const uint32_t color;
     
     // position
     Vector2 pos = Vector2(0, 0);
@@ -38,7 +38,7 @@ public:
      * @param m mass
      * @param color color in uint32_t format
     */
-    Particle(int r, double x, double y, double vx, double vy, double m=10.0, uint32_t color=sf::Color::Red.toInteger());
+    Particle(int r, double x, double y, double vx=0.0, double vy=0.0, double m=10.0, uint32_t color=sf::Color::Red.toInteger());
     
     /**
      * Applies forces and updates position and velocity.

@@ -8,23 +8,29 @@
 
 
 // constructor
-Particle::Particle(int r, double x, double y, double vx, double vy, double m, uint32_t color) {
-    this->r = r;
+Particle::Particle(int r, double x, double y, double vx, double vy, double m, uint32_t color):
+    r(r), m(m), color(color) {
     this->pos = Vector2(x, y);
     this->vel = Vector2(vx, vy);
-    this->m = m;
-    this->color = color;
 }
 
 // applies force and updates pos and vel
 void Particle::update(int fps) {
-    const int g = 100;
+    constexpr double g = 100.0;
+    constexpr double k = 30.0;
+    constexpr double damp = 1.0;
+    constexpr double x_0 = 100.0;
 
     Vector2 force = Vector2(0, this->m * g);
     for (auto p : this->connected) {
-        // TODO add spring force
-        
+        Vector2 diff = p->pos - this->pos;
+        double len = diff.length();
+        // - this->vel.length() * damp is for damping
+        force += diff/len * ((len - x_0) * k - this->vel.length() * damp);
     }
+
+    // TODO fix damping
+    // force -= this->vel/this->vel.length() * damp;
 
     Vector2 acc = force / this->m;
 

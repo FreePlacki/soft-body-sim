@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -g
+CFLAGS = -pedantic -Wall -Wextra -g
 
 bin\soft-body-sim: main.o particle.o vector2.o window.o engine.o shape.o fileManager.o body.o
 	$(CC) $^ -o $@ $(CFLAGS) -lsfml-graphics -lsfml-window -lsfml-system

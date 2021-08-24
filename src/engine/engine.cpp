@@ -6,9 +6,12 @@
 #include "engine.h"
 
 
+#define LOG(msg) \
+    std::cout << __FILE__ << "(" << __LINE__ << "): " << msg << std::endl
+
+
 // constructor
-Engine::Engine(Window &win) {
-    this->win = &win;
+Engine::Engine(Window &win):win(&win) {
     this->fps = this->win->getFps();
 
     initObjects();
@@ -62,17 +65,21 @@ void Engine::mainLoop() {
 
 // calls draw on all entities
 void Engine::draw() const {
-    //double energy = 0;
+    double energy = 0;
     for (auto p : particles) {
         (*p).draw(win->getWin());
-        //energy += 0.5*p.m * p.vel.length_sq();
-        //energy += p.m * 100 *(800-p.pos.y);
+        energy += 0.5*(*p).m * (*p).vel.length_sq();
+        energy += (*p).m * 100 *(800-(*p).pos.y);
     }
     // TODO the total energy is increasing
-    //std::cout << energy << "\n";
+    // LOG(energy);
 
     for (auto s : shapes) {
         (*s).draw(win->getWin());
+    }
+
+    for (auto b : bodies) {
+        (*b).draw(win->getWin());
     }
 }
 
@@ -86,29 +93,48 @@ void Engine::addShape(std::shared_ptr<Shape> s) {
     this->shapes.push_back(s);
 }
 
+// adds a body to the vector
+void Engine::addBody(std::shared_ptr<Body> b) {
+    this->bodies.push_back(b);
+    for (auto &row : b->particles) {
+        for (auto p : row) {
+            this->particles.push_back(p);
+        }
+    }
+}
+
 // initializes graphical objects. Called at construction
 void Engine::initObjects() {
     int win_width = win->getSize().first;
     int win_height = win->getSize().second;
 
-    std::shared_ptr<Particle> p1 = std::make_shared<Particle>(10, win_width/2, win_height/2-300, 100.0, 0.0);
-    std::shared_ptr<Particle> p2 = std::make_shared<Particle>(10, win_width/2+100.0, win_height/2-300, 100.0+50.0, 0.0);
-    std::shared_ptr<Particle> p3 = std::make_shared<Particle>(10, win_width/2+200.0, win_height/2-300, 100.0-50.0, 0.0);
+    std::shared_ptr<Particle> p1 = std::make_shared<Particle>(5, win_width/2, win_height/2-300, 100.0, 0.0);
+    std::shared_ptr<Particle> p2 = std::make_shared<Particle>(5, win_width/2+100.0, win_height/2-300, 100.0+50.0, 0.0);
+    std::shared_ptr<Particle> p3 = std::make_shared<Particle>(5, win_width/2+200.0, win_height/2-300, 100.0-50.0, 0.0);
     
     addParticle(p1);
     addParticle(p2);
     addParticle(p3);
 
     (*p1).connect(p2);
+    (*p1).connect(p3);
+    (*p2).connect(p3);
 
     // sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
-    std::vector<sf::Vector2f> rect1_points = Shape::makeRect(100, 50);
-    std::shared_ptr<Shape> rect1 = std::make_unique<Shape>(500, 600, 4, rect1_points);
+    std::vector<sf::Vector2f> rect1_points = Shape::makeRect(300, 50);
+    std::shared_ptr<Shape> rect1 = std::make_unique<Shape>(300, 600, 4, rect1_points);
     std::vector<sf::Vector2f> rect2_points = {sf::Vector2f(0, 0), sf::Vector2f(300, 150), sf::Vector2f(0, 300), sf::Vector2f(-300, 150)};
     std::shared_ptr<Shape> rect2 = std::make_unique<Shape>(200, 200, 4, rect2_points);
 
     addShape(rect1);
     addShape(rect2);
+
+
+    std::vector<sf::Vector2f> rect3_points = Shape::makeRect(100, 50);
+    std::shared_ptr<Shape> rect3 = std::make_unique<Shape>(200, 50, 4, rect3_points);
+    std::shared_ptr<Body> body1 = std::make_shared<Body>(rect3, 1, 5, 2.0);
+
+    addBody(body1);
 }
 
 // solves a particle-wall collision
@@ -127,9 +153,8 @@ void Engine::solveParticleWall(std::shared_ptr<Particle> p, int width, int heigh
 // solves a two-particle collision
 void Engine::solveParticleParticle(std::shared_ptr<Particle> p1, std::shared_ptr<Particle> p2) {
     // if they are not colliding return
-    if (!(abs((*p1).pos.x - (*p2).pos.x) <= (*p1).r + (*p2).r
-        &&  abs((*p1).pos.y - (*p2).pos.y) <= (*p1).r + (*p2).r))
-        return;
+    const double dist = (*p1).pos.dist((*p2).pos);
+    if (dist > (*p1).r + (*p2).r) return;
     
     Vector2 vel_diff1 = (*p1).vel - (*p2).vel;
     Vector2 pos_diff1 = (*p1).pos - (*p2).pos;
@@ -145,14 +170,16 @@ void Engine::solveParticleParticle(std::shared_ptr<Particle> p1, std::shared_ptr
     double dist_sq2 = pos_diff2 * pos_diff2;
     Vector2 v2 = pos_diff2 * red_mass2 * dot2 / dist_sq2;
 
-    //TODO push particles out
     (*p1).vel -= v1;
     (*p2).vel -= v2;
+
+    (*p1).pos += (*p1).vel/(*p1).vel.length() * ((*p1).r+(*p2).r - dist)/2;
+    (*p2).pos += (*p2).vel/(*p2).vel.length() * ((*p1).r+(*p2).r - dist)/2;
 }
 
 // solves particle-line collision
 void Engine::solveParticleLine(std::shared_ptr<Particle> p, const Vector2 &pt1, const Vector2 &pt2) {
-    // if dist > radius return
+    // if dist > radius: return
     double dist = abs(((*p).pos.x-pt1.x)*(-pt2.y+pt1.y) + ((*p).pos.y-pt1.y)*(pt2.x-pt1.x))
                         / pt1.dist(pt2);
     if (dist > (*p).r) return;
@@ -173,11 +200,16 @@ void Engine::solveParticleLine(std::shared_ptr<Particle> p, const Vector2 &pt1, 
     auto sign = [](double val) { return (0 < val) - (val < 0); };
     (*p).pos.x -= sign(v_perpand.x)*((*p).r-dist);
     (*p).pos.y -= sign(v_perpand.y)*((*p).r-dist);
+
+    // energy loss
+    (*p).vel *= 0.7;
 }
 
+// solves particle-shape collision
 void Engine::solveParticleShape(std::shared_ptr<Shape> s, std::shared_ptr<Particle> p) {
     // check collision
     for (int point = 0; point < (*s).point_count; point++) {
+        // TODO fix particles going inside the shape
         // two points for a line (mod to loop back to first one time)
         Vector2 pt1((*s).points[point].x, (*s).points[point].y);
         Vector2 pt2((*s).points[(point+1) % (*s).point_count]);
@@ -186,10 +218,10 @@ void Engine::solveParticleShape(std::shared_ptr<Shape> s, std::shared_ptr<Partic
         pt2 += (*s).pos;
 
         // check bondries
-        if ((*p).pos.x <= (*s).bondries.at("right")
-            && (*p).pos.x >= (*s).bondries.at("left")
-            && (*p).pos.y >= (*s).bondries.at("top")
-            && (*p).pos.y <= (*s).bondries.at("bottom")) {
+        if ((*p).pos.x - (*p).r <= (*s).bondries.at("right")
+            && (*p).pos.x + (*p).r >= (*s).bondries.at("left")
+            && (*p).pos.y + (*p).r >= (*s).bondries.at("top")
+            && (*p).pos.y - (*p).r <= (*s).bondries.at("bottom")) {
             solveParticleLine(p, pt1, pt2);
         }
     }
@@ -221,4 +253,9 @@ auto Engine::getParticles() const {
 // getter for shapes vector
 auto Engine::getShapes() const {
     return this->shapes;
+}
+
+// getter for shapes vector
+auto Engine::getBodies() const {
+    return this->bodies;
 }

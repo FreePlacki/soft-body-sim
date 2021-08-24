@@ -9,6 +9,7 @@
 #include <SFML/Window/Event.hpp>
 #include "../shapes/particle.h"
 #include "../shapes/shape.h"
+#include "../shapes/body.h"
 #include "window.h"
 #include <vector>
 #include <iostream>
@@ -22,8 +23,11 @@ private:
     // list of all Particle objects
     std::vector<std::shared_ptr<Particle>> particles;
 
-    // lost of all shapes
+    // list of all shapes
     std::vector<std::shared_ptr<Shape>> shapes;
+
+    // list of all shapes
+    std::vector<std::shared_ptr<Body>> bodies;
 
     // calculated fps. Starts with max fps value
     int fps;
@@ -88,7 +92,7 @@ public:
     void update();
 
     /**
-     * Calls the draw method for all the particles.
+     * Calls the draw method for all the objects.
     */
     void draw() const;
 
@@ -110,6 +114,12 @@ public:
     void addShape(std::shared_ptr<Shape> s);
 
     /**
+     * Adds a Shape object to the shapes vector.
+     * @param b body to add
+    */
+    void addBody(std::shared_ptr<Body> b);
+
+    /**
      * Getter method for the particles vector.
      * @return particles vector
     */
@@ -120,4 +130,10 @@ public:
      * @return shapes vector
     */
     auto getShapes() const;
+
+    /**
+     * Getter method for the bodies vector.
+     * @return bodies vector
+    */
+    auto getBodies() const;
 };

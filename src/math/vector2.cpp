@@ -7,10 +7,7 @@
 
 
 // constructor
-Vector2::Vector2(double x, double y) {
-    this->x = x;
-    this->y = y;
-}
+Vector2::Vector2(double x, double y):x(x), y(y) {}
 
 // constructor for sf::Vector2f
 Vector2::Vector2(const sf::Vector2f &v) {

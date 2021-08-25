@@ -21,7 +21,7 @@ Engine::Engine(Window &win):win(&win) {
 void Engine::update() {
     solveCollisions();
     for (auto p : particles) {
-        (*p).update(this->fps);
+        (*p).update(static_cast<double>(this->win->getFps()));
     }
 }
 
@@ -65,14 +65,9 @@ void Engine::mainLoop() {
 
 // calls draw on all entities
 void Engine::draw() const {
-    double energy = 0;
     for (auto p : particles) {
         (*p).draw(win->getWin());
-        energy += 0.5*(*p).m * (*p).vel.length_sq();
-        energy += (*p).m * 100 *(800-(*p).pos.y);
     }
-    // TODO the total energy is increasing
-    // LOG(energy);
 
     for (auto s : shapes) {
         (*s).draw(win->getWin());
@@ -112,29 +107,34 @@ void Engine::initObjects() {
     std::shared_ptr<Particle> p2 = std::make_shared<Particle>(5, win_width/2+100.0, win_height/2-300, 100.0+50.0, 0.0);
     std::shared_ptr<Particle> p3 = std::make_shared<Particle>(5, win_width/2+200.0, win_height/2-300, 100.0-50.0, 0.0);
     
-    addParticle(p1);
-    addParticle(p2);
-    addParticle(p3);
+    //addParticle(p1);
+    //addParticle(p2);
+    // addParticle(p3);
 
-    (*p1).connect(p2);
-    (*p1).connect(p3);
-    (*p2).connect(p3);
+    //(*p1).connect(p2, 100.0, 50.0);
+    // (*p1).connect(p3, 2.0, 30.0);
+    // (*p2).connect(p3, 2.0, 30.0);
 
     // sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
-    std::vector<sf::Vector2f> rect1_points = Shape::makeRect(300, 50);
-    std::shared_ptr<Shape> rect1 = std::make_unique<Shape>(300, 600, 4, rect1_points);
+    std::vector<sf::Vector2f> rect1_points = Shape::makeRect(100, 50);
+    std::shared_ptr<Shape> rect1 = std::make_shared<Shape>(600, 600, 4, rect1_points);
     std::vector<sf::Vector2f> rect2_points = {sf::Vector2f(0, 0), sf::Vector2f(300, 150), sf::Vector2f(0, 300), sf::Vector2f(-300, 150)};
-    std::shared_ptr<Shape> rect2 = std::make_unique<Shape>(200, 200, 4, rect2_points);
+    std::shared_ptr<Shape> rect2 = std::make_shared<Shape>(200, 200, 4, rect2_points);
 
     addShape(rect1);
     addShape(rect2);
 
 
-    std::vector<sf::Vector2f> rect3_points = Shape::makeRect(100, 50);
-    std::shared_ptr<Shape> rect3 = std::make_unique<Shape>(200, 50, 4, rect3_points);
-    std::shared_ptr<Body> body1 = std::make_shared<Body>(rect3, 1, 5, 2.0);
+    // std::vector<sf::Vector2f> rect3_points = Shape::makeRect(100, 50);
+    // std::shared_ptr<Shape> rect3 = std::make_shared<Shape>(200, 50, 4, rect3_points);
+    // std::shared_ptr<Body> body1 = std::make_shared<Body>(rect3, 3, 10, 2.0, 30.0);
 
-    addBody(body1);
+    std::vector<sf::Vector2f> rect4_points = Shape::makeRect(100, 200);
+    std::shared_ptr<Shape> rect4 = std::make_shared<Shape>(250, 20, 4, rect4_points);
+    std::shared_ptr<Body> body2 = std::make_shared<Body>(rect4, 4, 15, 10.0, 20000.0);
+
+    // addBody(body1);
+    addBody(body2);
 }
 
 // solves a particle-wall collision
@@ -148,6 +148,8 @@ void Engine::solveParticleWall(std::shared_ptr<Particle> p, int width, int heigh
     solveParticleLine(p, top_right, bottom_right);
     solveParticleLine(p, bottom_right, bottom_left);
     solveParticleLine(p, bottom_left, top_left);
+
+    // TODO push particle that had gone out of bounds
 }
 
 // solves a two-particle collision
@@ -192,6 +194,9 @@ void Engine::solveParticleLine(std::shared_ptr<Particle> p, const Vector2 &pt1, 
     Vector2 v_perpand(-(-(*p).vel.x*dy*dy + (*p).vel.y*dx*dy)/line_len_sq,
                        (-(*p).vel.x*dx*dy + (*p).vel.y*dx*dx)/line_len_sq);
 
+    // energy loss
+    (*p).vel *= 0.99;
+
     // substructing 2x perpandicular
     v_perpand *= 2;
     (*p).vel -= v_perpand;
@@ -200,9 +205,6 @@ void Engine::solveParticleLine(std::shared_ptr<Particle> p, const Vector2 &pt1, 
     auto sign = [](double val) { return (0 < val) - (val < 0); };
     (*p).pos.x -= sign(v_perpand.x)*((*p).r-dist);
     (*p).pos.y -= sign(v_perpand.y)*((*p).r-dist);
-
-    // energy loss
-    (*p).vel *= 0.7;
 }
 
 // solves particle-shape collision

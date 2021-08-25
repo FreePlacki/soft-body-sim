@@ -13,7 +13,7 @@ private:
     // Shape shape = Shape(0, 0, 0, Shape::makeRect(0,0));
     std::shared_ptr<Shape> shape;
     const int particle_r, particle_spacing;
-    const double particle_m;
+    const double particle_m, spring_k;
 
 public:
     // 2d vector (each row is a vector)
@@ -25,7 +25,7 @@ public:
      * @param particle_r radius of particles
      * @param particle_spacing value of "x_0" for vertical and horizontal springs
     */
-    Body(std::shared_ptr<Shape> shape, int particle_r, int particle_spacing, double particle_m);
+    Body(std::shared_ptr<Shape> shape, int particle_r, int particle_spacing, double particle_m, double spring_k=50.0);
 
     void initParticles();
 

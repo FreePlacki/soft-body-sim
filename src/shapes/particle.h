@@ -25,8 +25,8 @@ public:
     // velocity
     Vector2 vel = Vector2(0, 0);
 
-    // particles that are connected by a spring force
-    std::vector<std::shared_ptr<Particle>> connected;
+    // particles that are connected by a spring force (particle, x_0, k)
+    std::vector<std::tuple<std::shared_ptr<Particle>, double, double>> connected;
 
     /**
      * Class constructor.
@@ -44,7 +44,7 @@ public:
      * Applies forces and updates position and velocity.
      * @param fps current fps
     */
-    void update(int fps);
+    void update(double fps);
 
     /**
      * Draws a particle (circle) to the window.
@@ -53,9 +53,16 @@ public:
     void draw(sf::RenderWindow &win) const;
 
     /**
-     * Adds a particle to the connectes list.
+     * Adds a particle to the connected list.
      * Particles connected interact by a spring force.
      * @param p particle to connect to
     */
-    void connect(std::shared_ptr<Particle> p);
+    void connect(std::shared_ptr<Particle> p, double x_0, double k);
+
+private:
+    /**
+     * Calculates acceleration given current position
+     * @return Vector2 acceleration
+    */
+    Vector2 calcAcceleration() const;
 };

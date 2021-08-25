@@ -85,9 +85,9 @@ public:
     Vector2 operator-(const Vector2 &v) const;
 
     /**
-     * Operator overload for the cross product of two vectors.
+     * Operator overload for the dot product of two vectors.
      * @param v second vector to compare
-     * @return double the result of the cross product
+     * @return double the result of the dot product
     */
     double operator*(const Vector2 &v) const;
 

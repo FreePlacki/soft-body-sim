@@ -1,28 +1,20 @@
-/**
- * Implements methods from the Particle class.
- * @file particle.cpp
-*/
-
 #include "particle.h"
 #include <iostream>
 
 
-// constructor
 Particle::Particle(int r, double x, double y, double vx, double vy, double m, uint32_t color):
     r(r), m(m), color(color) {
     this->pos = Vector2(x, y);
     this->vel = Vector2(vx, vy);
 }
 
-// applies force and updates pos and vel
 void Particle::update(double fps) {
-
     Vector2 acc = calcAcceleration();
 
-    // TODO temp time slowdown
-    // fps /= 3;
     double dt = 1/fps;
 
+    // Velocity-Verlet integration (https://en.wikipedia.org/wiki/Verlet_integration#Velocity_Verlet)
+    
     // v(t + 1/2dt)
     this->vel += acc/2 * dt;
     // x(t + dt)
@@ -33,7 +25,7 @@ void Particle::update(double fps) {
     this->vel += acc2/2 * dt;
 }
 
-// acceleration at current x value
+// acceleration at current position
 Vector2 Particle::calcAcceleration() const {
     constexpr double g = 100.0;
     constexpr double damp = 50.0;
@@ -47,8 +39,7 @@ Vector2 Particle::calcAcceleration() const {
         Vector2 x_diff = p->pos - this->pos;
         Vector2 v_diff = p->vel - this->vel;
         double len = x_diff.length();
-        // TODO spring force not working properly+ x_diff/len*v_diff*damp
-        // force += diff/len * ((len - x_0) * k);
+
         Vector2 s_force = x_diff/len*((len-x_0)*k + x_diff/len*v_diff*damp);
         force += s_force;
 
@@ -62,7 +53,6 @@ Vector2 Particle::calcAcceleration() const {
     return acc;
 }
 
-// draws circle to the window
 void Particle::draw(sf::RenderWindow &win) const {
     sf::CircleShape circ(this->r);
     circ.setFillColor(sf::Color(this->color));
@@ -82,7 +72,6 @@ void Particle::draw(sf::RenderWindow &win) const {
     win.draw(circ);
 }
 
-// connects with another particle
 void Particle::connect(std::shared_ptr<Particle> p, double x_0, double k) {
     std::shared_ptr<Particle> this_p(this);
 

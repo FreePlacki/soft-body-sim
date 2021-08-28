@@ -1,18 +1,12 @@
-/**
- * Implements methods from the Shape class.
- * @file shape.cpp
-*/
-
 #include "shape.h"
 #include <iostream>
 
 
-// constructor
-Shape::Shape(int x, int y, int point_count, const std::vector<sf::Vector2f> &points, uint32_t outline_color, uint32_t background_color):
-    point_count(point_count), points(points), outline_color(outline_color), background_color(background_color) {
+Shape::Shape(int x, int y, const std::vector<sf::Vector2f> &points, uint32_t outline_color, uint32_t background_color):
+    points(points), outline_color(outline_color), background_color(background_color) {
     this->pos = Vector2(x, y);
 
-    setBondries(points, point_count);
+    setBondries(points);
 }
 
 std::vector<sf::Vector2f> Shape::makeRect(int width, int height) {
@@ -20,11 +14,10 @@ std::vector<sf::Vector2f> Shape::makeRect(int width, int height) {
     return pts;
 }
 
-// setting shape's bondries
-void Shape::setBondries(const std::vector<sf::Vector2f> &points, int point_count) {
-    for (int i = 0; i < point_count; i++) {
-        int x = points[i].x + this->pos.x;
-        int y = points[i].y + this->pos.y;
+void Shape::setBondries(const std::vector<sf::Vector2f> &points) {
+    for (auto point : points) {
+        int x = point.x + this->pos.x;
+        int y = point.y + this->pos.y;
 
         if (this->bondries["right"] == -1
         || x > this->bondries["right"])
@@ -39,13 +32,11 @@ void Shape::setBondries(const std::vector<sf::Vector2f> &points, int point_count
         || y > this->bondries["bottom"])
             this->bondries["bottom"] = y;
     }
-    // std::cout << bondries["top"] << " : " << bondries["right"] << " : " << bondries["bottom"] << " : " << bondries["left"] << "\n";
 }
 
-// draws the shape to the window
 void Shape::draw(sf::RenderWindow &win) const{
-    sf::ConvexShape polygon(this->point_count);
-    for (int i = 0; i < this->point_count; i++) {
+    sf::ConvexShape polygon(this->points.size());
+    for (size_t i = 0; i < this->points.size(); i++) {
         polygon.setPoint(i, this->points[i]);
     }
 

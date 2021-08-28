@@ -1,19 +1,12 @@
-/**
- * Implements methods from the Body class.
- * @file body.cpp
-*/
-
 #include "body.h"
 #include <iostream>
 
 
-// constructor
 Body::Body(std::shared_ptr<Shape> shape, int particle_r, int particle_spacing, double particle_m, double spring_k):
 shape(shape), particle_r(particle_r), particle_spacing(particle_spacing), particle_m(particle_m), spring_k(spring_k) {
     initParticles();
 }
 
-// initializes a vector of particles
 void Body::initParticles() {
     // TODO right now only supporting rectangles
 
@@ -23,8 +16,6 @@ void Body::initParticles() {
     // n of particles in one row and col
     const int N_row = floor((shape_width + particle_spacing) / (2*particle_r + particle_spacing));
     const int N_col = floor((shape_height + particle_spacing) / (2*particle_r + particle_spacing));
-
-    //std::cout << N_row << " " << N_col << '\n';
 
     // initializing
     for (int i = 0; i < N_col; i++) {
@@ -57,14 +48,10 @@ void Body::initParticles() {
     }
 }
 
-// calls draw on particles
 void Body::draw(sf::RenderWindow &win) {
-    //std::cout << particles.size();
     for (auto &row : particles) {
-        //std::cout << "drawing\n";
         for (auto p : row) {
             p->draw(win);
-            //std::cout << "drawing\n";
         }
     }
 }

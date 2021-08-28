@@ -1,14 +1,10 @@
-/**
- * Implements methods from the fileManager class.
- * @file fileManager.cpp
-*/
-
 #include "fileManager.h"
 
-const std::string FileManager::SETTINGS = "data/settings.txt";
+
+const std::string FileManager::SETTINGS_PATH = "data/settings.txt";
 
 void FileManager::saveCurrentSettings(const std::map<std::string, int>  &settings) {
-    std::fstream file(SETTINGS, std::ios::out);
+    std::fstream file(SETTINGS_PATH, std::ios::out);
     if (file.is_open()) {
         for (const auto &x : settings) {
             std::string line = x.first + "=" + std::to_string(x.second);
@@ -18,12 +14,12 @@ void FileManager::saveCurrentSettings(const std::map<std::string, int>  &setting
         std::cout << "Settings saved successfully\n";
         file.close();
     } else {
-        std::cout << "Error opening a file: " << SETTINGS << std::endl;
+        std::cout << "Error opening a file: " << SETTINGS_PATH << std::endl;
     }
 }
 
 const std::map<std::string, int> FileManager::getCurrentSettings() {
-    std::fstream file1(SETTINGS, std::ios::in);
+    std::fstream file1(SETTINGS_PATH, std::ios::in);
     if (file1.is_open()) {
         std::map<std::string, int> settings;
         std::string line;
@@ -37,7 +33,7 @@ const std::map<std::string, int> FileManager::getCurrentSettings() {
         file1.close();
         return settings;
     } else {
-        std::cout << "Error opening a file: " << SETTINGS << std::endl;
+        std::cout << "Error opening a file: " << SETTINGS_PATH << std::endl;
         return std::map<std::string, int> {};
     }
 }

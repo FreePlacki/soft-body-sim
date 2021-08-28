@@ -1,23 +1,15 @@
-/**
- * Implements methods from the Engine class.
- * @file engine.cpp
-*/
-
 #include "engine.h"
-
 
 #define LOG(msg) \
     std::cout << __FILE__ << "(" << __LINE__ << "): " << msg << std::endl
 
 
-// constructor
 Engine::Engine(Window &win):win(&win) {
     this->fps = this->win->getFps();
 
     initObjects();
 }
 
-// calls update on all particles and checks collisions
 void Engine::update() {
     solveCollisions();
     for (auto p : particles) {
@@ -25,9 +17,7 @@ void Engine::update() {
     }
 }
 
-// main while loop
 void Engine::mainLoop() {
-    // calculating fps
     double fps;
     // counter is for displaying fps once every x seconds
     int counter = 0;
@@ -42,12 +32,11 @@ void Engine::mainLoop() {
             if (event.type == sf::Event::Closed)
                 win->getWin().close();
         }
+
         // drawing process
         win->getWin().clear();
-
         update();
         draw();
-
         win->getWin().display();
 
         // displaying fps
@@ -63,7 +52,6 @@ void Engine::mainLoop() {
     }
 }
 
-// calls draw on all entities
 void Engine::draw() const {
     for (auto p : particles) {
         (*p).draw(win->getWin());
@@ -78,17 +66,14 @@ void Engine::draw() const {
     }
 }
 
-// adds a particle to the vector
 void Engine::addParticle(std::shared_ptr<Particle> p) {
     this->particles.push_back(p);
 }
 
-// adds a shape to the vector
 void Engine::addShape(std::shared_ptr<Shape> s) {
     this->shapes.push_back(s);
 }
 
-// adds a body to the vector
 void Engine::addBody(std::shared_ptr<Body> b) {
     this->bodies.push_back(b);
     for (auto &row : b->particles) {
@@ -98,7 +83,6 @@ void Engine::addBody(std::shared_ptr<Body> b) {
     }
 }
 
-// initializes graphical objects. Called at construction
 void Engine::initObjects() {
     int win_width = win->getSize().first;
     int win_height = win->getSize().second;
@@ -107,19 +91,19 @@ void Engine::initObjects() {
     std::shared_ptr<Particle> p2 = std::make_shared<Particle>(5, win_width/2+100.0, win_height/2-300, 100.0+50.0, 0.0);
     std::shared_ptr<Particle> p3 = std::make_shared<Particle>(5, win_width/2+200.0, win_height/2-300, 100.0-50.0, 0.0);
     
-    //addParticle(p1);
-    //addParticle(p2);
+    // addParticle(p1);
+    // addParticle(p2);
     // addParticle(p3);
 
-    //(*p1).connect(p2, 100.0, 50.0);
+    // (*p1).connect(p2, 100.0, 50.0);
     // (*p1).connect(p3, 2.0, 30.0);
     // (*p2).connect(p3, 2.0, 30.0);
 
     // sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
     std::vector<sf::Vector2f> rect1_points = Shape::makeRect(100, 50);
-    std::shared_ptr<Shape> rect1 = std::make_shared<Shape>(600, 600, 4, rect1_points);
+    std::shared_ptr<Shape> rect1 = std::make_shared<Shape>(600, 600, rect1_points);
     std::vector<sf::Vector2f> rect2_points = {sf::Vector2f(0, 0), sf::Vector2f(300, 150), sf::Vector2f(0, 300), sf::Vector2f(-300, 150)};
-    std::shared_ptr<Shape> rect2 = std::make_shared<Shape>(200, 200, 4, rect2_points);
+    std::shared_ptr<Shape> rect2 = std::make_shared<Shape>(200, 200, rect2_points);
 
     addShape(rect1);
     addShape(rect2);
@@ -130,14 +114,13 @@ void Engine::initObjects() {
     // std::shared_ptr<Body> body1 = std::make_shared<Body>(rect3, 3, 10, 2.0, 30.0);
 
     std::vector<sf::Vector2f> rect4_points = Shape::makeRect(100, 200);
-    std::shared_ptr<Shape> rect4 = std::make_shared<Shape>(250, 20, 4, rect4_points);
+    std::shared_ptr<Shape> rect4 = std::make_shared<Shape>(250, 20, rect4_points);
     std::shared_ptr<Body> body2 = std::make_shared<Body>(rect4, 4, 15, 10.0, 20000.0);
 
     // addBody(body1);
     addBody(body2);
 }
 
-// solves a particle-wall collision
 void Engine::solveParticleWall(std::shared_ptr<Particle> p, int width, int height) {
     Vector2 top_left(0,0);
     Vector2 top_right(width,0);
@@ -152,7 +135,6 @@ void Engine::solveParticleWall(std::shared_ptr<Particle> p, int width, int heigh
     // TODO push particle that had gone out of bounds
 }
 
-// solves a two-particle collision
 void Engine::solveParticleParticle(std::shared_ptr<Particle> p1, std::shared_ptr<Particle> p2) {
     // if they are not colliding return
     const double dist = (*p1).pos.dist((*p2).pos);
@@ -179,8 +161,9 @@ void Engine::solveParticleParticle(std::shared_ptr<Particle> p1, std::shared_ptr
     (*p2).pos += (*p2).vel/(*p2).vel.length() * ((*p1).r+(*p2).r - dist)/2;
 }
 
-// solves particle-line collision
 void Engine::solveParticleLine(std::shared_ptr<Particle> p, const Vector2 &pt1, const Vector2 &pt2) {
+    // TODO check if particle is in lines bondries
+    
     // if dist > radius: return
     double dist = abs(((*p).pos.x-pt1.x)*(-pt2.y+pt1.y) + ((*p).pos.y-pt1.y)*(pt2.x-pt1.x))
                         / pt1.dist(pt2);
@@ -207,57 +190,36 @@ void Engine::solveParticleLine(std::shared_ptr<Particle> p, const Vector2 &pt1, 
     (*p).pos.y -= sign(v_perpand.y)*((*p).r-dist);
 }
 
-// solves particle-shape collision
 void Engine::solveParticleShape(std::shared_ptr<Shape> s, std::shared_ptr<Particle> p) {
-    // check collision
-    for (int point = 0; point < (*s).point_count; point++) {
+    for (size_t point = 0; point < s->points.size(); point++) {
         // TODO fix particles going inside the shape
-        // two points for a line (mod to loop back to first one time)
-        Vector2 pt1((*s).points[point].x, (*s).points[point].y);
-        Vector2 pt2((*s).points[(point+1) % (*s).point_count]);
-        // obtaining the absolute pos
-        pt1 += (*s).pos;
-        pt2 += (*s).pos;
 
-        // check bondries
-        if ((*p).pos.x - (*p).r <= (*s).bondries.at("right")
-            && (*p).pos.x + (*p).r >= (*s).bondries.at("left")
-            && (*p).pos.y + (*p).r >= (*s).bondries.at("top")
-            && (*p).pos.y - (*p).r <= (*s).bondries.at("bottom")) {
+        // two points for a line (mod to loop back to first one time)
+        Vector2 pt1(s->points[point].x, s->points[point].y);
+        Vector2 pt2(s->points[(point+1) % s->points.size()]);
+        // obtaining the absolute pos
+        pt1 += s->pos;
+        pt2 += s->pos;
+
+        if (p->pos.x - p->r <= s->bondries.at("right")
+            && p->pos.x + p->r >= s->bondries.at("left")
+            && p->pos.y + p->r >= s->bondries.at("top")
+            && p->pos.y - p->r <= s->bondries.at("bottom")) {
             solveParticleLine(p, pt1, pt2);
         }
     }
 }
 
-// solves collisions for all particles
 void Engine::solveCollisions() {
     for (size_t p1 = 0; p1 < particles.size(); p1++) {
-        // wall collision
         solveParticleWall(particles[p1], win->getSize().first, win->getSize().second);
 
-        // particle collision
         for (size_t p2 = p1+1; p2 < particles.size(); p2++) {
             solveParticleParticle(particles[p1], particles[p2]);
         }
 
-        //shape collision
         for (auto s : shapes) {
             solveParticleShape(s, particles[p1]);
         }
     }
-}
-
-// getter for particles vector
-auto Engine::getParticles() const {
-    return this->particles;
-}
-
-// getter for shapes vector
-auto Engine::getShapes() const {
-    return this->shapes;
-}
-
-// getter for shapes vector
-auto Engine::getBodies() const {
-    return this->bodies;
 }

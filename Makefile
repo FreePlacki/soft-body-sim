@@ -9,13 +9,13 @@ BIN=bin/soft-body-sim
 
 all: $(BIN)
 
-release: CFLAGS=-O3 -Wall -DNDEBUG
+release: CFLAGS=-O2 -Wall -DNDEBUG
 release: clean
 release: $(BIN)
 
 $(BIN): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ -lsfml-graphics -lsfml-window -lsfml-system
-	bin/soft-body-sim.exe
+	$(BIN).exe
 
 $(OBJ)/%.o: $(SRC)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@

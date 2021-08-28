@@ -1,7 +1,6 @@
 /**
- * SFML app for simulating soft body interactions.
- * @file main.cpp
- * @version dev 26/08/2021
+ * SFML app for simulating soft body dynamics.
+ * @version dev 28/08/2021
 */
 
 #include "window.h"
@@ -10,9 +9,9 @@
 
 
 int main() {
-    FileManager f;
+    FileManager fm;
 
-    Window win(f.getCurrentSettings());
+    Window win(fm.getCurrentSettings());
     Engine eng(win);
 
     eng.mainLoop();

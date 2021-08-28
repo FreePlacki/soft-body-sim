@@ -1,33 +1,24 @@
-CC = g++
-CFLAGS = -pedantic -Wall -Wextra -g
+CC=g++
+CFLAGS=-pedantic -Wall -Wextra -g
 
-bin\soft-body-sim: main.o particle.o vector2.o window.o engine.o shape.o fileManager.o body.o
-	$(CC) $^ -o $@ $(CFLAGS) -lsfml-graphics -lsfml-window -lsfml-system
-	bin\soft-body-sim.exe
+SRC=src
+OBJ=obj
+SRCS=$(wildcard $(SRC)/*.cpp)
+OBJS=$(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
+BIN=bin/soft-body-sim
 
-main.o: src/main.cpp
-	$(CC) -c $^ $(CFLAGS)
+all: $(BIN)
 
-particle.o: src/shapes/particle.cpp
-	$(CC) -c $^ $(CFLAGS)
+release: CFLAGS=-O3 -Wall -DNDEBUG
+release: clean
+release: $(BIN)
 
-vector2.o: src/math/vector2.cpp
-	$(CC) -c $^ $(CFLAGS)
+$(BIN): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@ -lsfml-graphics -lsfml-window -lsfml-system
+	bin/soft-body-sim.exe
 
-window.o: src/engine/window.cpp
-	$(CC) -c $^ $(CFLAGS)
-
-engine.o: src/engine/engine.cpp
-	$(CC) -c $^ $(CFLAGS)
-
-shape.o: src/shapes/shape.cpp
-	$(CC) -c $^ $(CFLAGS)
-
-fileManager.o: src/engine/fileManager.cpp
-	$(CC) -c $^ $(CFLAGS)
-
-body.o: src/shapes/body.cpp
-	$(CC) -c $^ $(CFLAGS)
+$(OBJ)/%.o: $(SRC)/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm *.o
+	rm $(OBJ)/*.o

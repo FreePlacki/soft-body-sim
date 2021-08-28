@@ -7,7 +7,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "../math/vector2.h"
+#include "vector2.h"
 #include <memory>
 
 

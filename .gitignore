@@ -1,2 +1,2 @@
 # .o files
-obj/**
+obj/*.o

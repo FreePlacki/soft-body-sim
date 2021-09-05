@@ -14,6 +14,7 @@ public:
     double x, y;
 
 public:
+    Vector2();
     Vector2(double x, double y);
     Vector2(const sf::Vector2f &v);
 

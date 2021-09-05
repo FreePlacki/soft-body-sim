@@ -25,8 +25,7 @@ public:
     const double m;
     const uint32_t color;
     
-    Vector2 pos = Vector2(0, 0);
-    Vector2 vel = Vector2(0, 0);
+    Vector2 pos, vel;
 
     // particles that are connected with it by a spring force (particle, x_0, k)
     std::vector<std::tuple<std::shared_ptr<Particle>, double, double>> connected;

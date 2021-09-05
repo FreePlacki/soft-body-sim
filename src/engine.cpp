@@ -18,12 +18,14 @@ void Engine::update() {
 }
 
 void Engine::mainLoop() {
-    double fps;
+
     // counter is for displaying fps once every x seconds
     int counter = 0;
     sf::Clock clock;
     sf::Time previousTime = clock.getElapsedTime();
     sf::Time currentTime;
+
+    UIManager uiManager;
 
     // event loop
     while (win->getWin().isOpen()) {
@@ -31,10 +33,14 @@ void Engine::mainLoop() {
         while (win->getWin().pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 win->getWin().close();
+            if (event.type == sf::Event::MouseButtonPressed)
+                uiManager.onClickListener(sf::Mouse::getPosition(win->getWin()));
         }
+        
 
         // drawing process
         win->getWin().clear();
+        uiManager.draw(win->getWin());
         update();
         draw();
         win->getWin().display();
@@ -42,7 +48,7 @@ void Engine::mainLoop() {
         // displaying fps
         counter++;
         currentTime = clock.getElapsedTime();
-        fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
+        double fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
         previousTime = currentTime;
         if (counter == win->getFps()) {
             this->fps = fps;
@@ -87,9 +93,9 @@ void Engine::initObjects() {
     int win_width = win->getSize().first;
     int win_height = win->getSize().second;
 
-    std::shared_ptr<Particle> p1 = std::make_shared<Particle>(5, win_width/2, win_height/2-300, 100.0, 0.0);
-    std::shared_ptr<Particle> p2 = std::make_shared<Particle>(5, win_width/2+100.0, win_height/2-300, 100.0+50.0, 0.0);
-    std::shared_ptr<Particle> p3 = std::make_shared<Particle>(5, win_width/2+200.0, win_height/2-300, 100.0-50.0, 0.0);
+    // std::shared_ptr<Particle> p1 = std::make_shared<Particle>(5, win_width/2, win_height/2-300, 100.0, 0.0);
+    // std::shared_ptr<Particle> p2 = std::make_shared<Particle>(5, win_width/2+100.0, win_height/2-300, 100.0+50.0, 0.0);
+    // std::shared_ptr<Particle> p3 = std::make_shared<Particle>(5, win_width/2+200.0, win_height/2-300, 100.0-50.0, 0.0);
     
     // addParticle(p1);
     // addParticle(p2);
@@ -99,7 +105,6 @@ void Engine::initObjects() {
     // (*p1).connect(p3, 2.0, 30.0);
     // (*p2).connect(p3, 2.0, 30.0);
 
-    // sf::Vector2f rect1_points[4] = {sf::Vector2f(0, 0), sf::Vector2f(100, 0), sf::Vector2f(100, 50), sf::Vector2f(0, 50)};
     std::vector<sf::Vector2f> rect1_points = Shape::makeRect(100, 50);
     std::shared_ptr<Shape> rect1 = std::make_shared<Shape>(600, 600, rect1_points);
     std::vector<sf::Vector2f> rect2_points = {sf::Vector2f(0, 0), sf::Vector2f(300, 150), sf::Vector2f(0, 300), sf::Vector2f(-300, 150)};
@@ -211,6 +216,7 @@ void Engine::solveParticleShape(std::shared_ptr<Shape> s, std::shared_ptr<Partic
 }
 
 void Engine::solveCollisions() {
+    // TODO implement raycasting instead of particle-line
     for (size_t p1 = 0; p1 < particles.size(); p1++) {
         solveParticleWall(particles[p1], win->getSize().first, win->getSize().second);
 

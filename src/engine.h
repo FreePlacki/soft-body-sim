@@ -9,6 +9,7 @@
 #include "shape.h"
 #include "body.h"
 #include "window.h"
+#include "uiManager.h"
 #include <vector>
 #include <iostream>
 

@@ -18,8 +18,7 @@ public:
     void draw(sf::RenderWindow &win) const;
 
 public:
-    Vector2 pos = Vector2(0, 0);
-    int width, height;
+    Vector2 pos;
 
     std::vector<sf::Vector2f> points;
     // shape's farthest points

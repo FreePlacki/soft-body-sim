@@ -1,6 +1,5 @@
 /**
  * SFML app for simulating soft body dynamics.
- * @version dev 28/08/2021
 */
 
 #include "window.h"
@@ -9,12 +8,12 @@
 
 
 int main() {
-    FileManager fm;
+    std::unique_ptr<FileManager> fm = std::make_unique<FileManager>();
 
-    Window win(fm.getCurrentSettings());
-    Engine eng(win);
+    std::unique_ptr<Window> win = std::make_unique<Window>((*fm).getCurrentSettings());
+    std::unique_ptr<Engine> eng = std::make_unique<Engine>(std::move(win));
 
-    eng.mainLoop();
+    (*eng).mainLoop();
 
     return 0;
 }

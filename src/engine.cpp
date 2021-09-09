@@ -4,7 +4,7 @@
     std::cout << __FILE__ << "(" << __LINE__ << "): " << msg << std::endl
 
 
-Engine::Engine(Window &win):win(&win) {
+Engine::Engine(std::unique_ptr<Window> win):win(std::move(win)) {
     this->fps = this->win->getFps();
 
     initObjects();

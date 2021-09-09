@@ -16,7 +16,7 @@
 
 class Engine {
 public:
-    Engine(Window &win);
+    Engine(std::unique_ptr<Window> win);
 
     void mainLoop();
 
@@ -25,8 +25,9 @@ public:
     void addBody(std::shared_ptr<Body> b);
 
 private:
-    Window *win;
+    std::unique_ptr<Window> win;
 
+    // TODO change to unique pointers
     std::vector<std::shared_ptr<Particle>> particles;
     std::vector<std::shared_ptr<Shape>> shapes;
     std::vector<std::shared_ptr<Body>> bodies;

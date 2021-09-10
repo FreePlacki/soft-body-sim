@@ -42,7 +42,7 @@ $(T_BIN): $(T_OBJS) $(F_OBJS)
 	$(T_BIN).exe
 
 $(T_OBJ)/%.o: $(T_SRC)/%.cpp
-	$(CC) -c $< -o $@
+	$(CC) -c $< -o $@ -lrt -lm
 
 tests-clean:
 	rm $(T_OBJ)/*.o

@@ -12,7 +12,7 @@
 
 class Particle {
 public:
-    Particle(int r, double x, double y, double vx=0.0, double vy=0.0, double m=10.0, uint32_t color=sf::Color::Red.toInteger());
+    Particle(int r, double x, double y, double vx=0.0, double vy=0.0, double m=10.0, sf::Color color=sf::Color::Red);
     
     void update(double fps);
     void draw(sf::RenderWindow &win) const;
@@ -23,12 +23,22 @@ public:
 public:
     const int r;
     const double m;
-    const uint32_t color;
+    // const uint32_t color;
+    const sf::Color color;
     
     Vector2 pos, vel;
 
     // particles that are connected with it by a spring force (particle, x_0, k)
-    std::vector<std::tuple<std::shared_ptr<Particle>, double, double>> connected;
+    struct Connection {
+        Connection(std::shared_ptr<Particle> p, double x0, double k)
+            :particle(p), x0(x0), k(k) {};
+
+        std::shared_ptr<Particle> particle;
+        double x0;
+        double k;
+    };
+    
+    std::vector<Connection> connected;
 
 private:
     // acceleration at current position

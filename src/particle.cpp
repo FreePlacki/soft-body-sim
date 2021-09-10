@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Particle::Particle(int r, double x, double y, double vx, double vy, double m, uint32_t color):
+Particle::Particle(int r, double x, double y, double vx, double vy, double m, sf::Color color):
     r(r), m(m), color(color) {
     this->pos = Vector2(x, y);
     this->vel = Vector2(vx, vy);
@@ -32,9 +32,9 @@ Vector2 Particle::calcAcceleration() const {
 
     Vector2 force = Vector2(0, this->m * g);
     for (auto el : this->connected) {
-        auto p = std::get<0>(el);
-        double x_0 = std::get<1>(el);
-        double k = std::get<2>(el);
+        auto p = el.particle;
+        double x_0 = el.x0;
+        double k = el.k;
 
         Vector2 x_diff = p->pos - this->pos;
         Vector2 v_diff = p->vel - this->vel;
@@ -60,7 +60,7 @@ void Particle::draw(sf::RenderWindow &win) const {
     circ.setPosition(this->pos.x, this->pos.y);
 
     for (auto el : connected) {
-        auto p = std::get<0>(el);
+        auto p = el.particle;
         sf::Vertex line[] = {
             sf::Vertex(sf::Vector2f(this->pos.x, this->pos.y), sf::Color::White),
             sf::Vertex(sf::Vector2f(p->pos.x, p->pos.y), sf::Color::White),
@@ -75,7 +75,7 @@ void Particle::draw(sf::RenderWindow &win) const {
 void Particle::connect(std::shared_ptr<Particle> p, double x_0, double k) {
     std::shared_ptr<Particle> this_p(this);
 
-    this_p->connected.push_back(std::make_tuple(p, x_0, k));
+    this_p->connected.push_back(Connection(p, x_0, k));
     // add this particle to the other's list also
-    (*p).connected.push_back(std::make_tuple(this_p, x_0, k));
+    (*p).connected.push_back(Connection(this_p, x_0, k));
 }
